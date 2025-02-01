@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { translateIcon } from "../atoms/Icons";
 
 type Params = {
     accent: string;
@@ -10,14 +11,14 @@ export default function CardHeader(params: Params) {
     const { accent, gender, shortDescription } = params
 
     return (
-        <div className="flex items-center gap-4 mt-2 mb-2">
-            <div className='w-[64px]'>
+        <div className="flex items-center gap-4 mt-2 mb-2 pt-2 px-4">
+            <div className='w-[49px]'>
                 <Image
-                    width={64}
-                    height={64}
+                    width={49}
+                    height={49}
                     src={`/${gender}.png`}
                     alt={`${shortDescription} | English Flow`}
-                    className="w-16 h-16 rounded-full object-cover"
+                    className="w-[49px] h-[49px] rounded-full object-cover"
                 />
             </div>
 

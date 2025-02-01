@@ -21,13 +21,13 @@ export default function PlayPhrase(params: Params) {
 
     if (audioPlayer.playing) {
         return (
-            <button onClick={() => audioPlayer.pause()}>
+            <button className="cursor-pointer" onClick={() => audioPlayer.pause()}>
                 {stopIcon(35, 35)}
             </button>
         )
     }
     return (
-        <button onClick={() => audioPlayer.play()}>
+        <button className="cursor-pointer" onClick={() => audioPlayer.play()}>
             {playIcon(35, 35)}
         </button>
     )
