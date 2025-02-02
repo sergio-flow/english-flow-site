@@ -15,7 +15,7 @@ export default function Hero(params: Params) {
             <div className="country-language flex items-center gap-4 mb-10">
                 <Link href={`/${countryCode}`} className="flex cursor-pointer items-center gap-2 p-1 px-2 pr-3 rounded-lg bg-white/10">
                     <span className="em em-flag-md" />
-                    <span className="text-white font-semibold text-md">Moldova</span>
+                    <span className="text-white font-semibold text-xs">Moldova</span>
                 </Link>
                 <span className="text-white text-lg">→</span>
                 <div className="flex items-center rounded-lg bg-white/10">
