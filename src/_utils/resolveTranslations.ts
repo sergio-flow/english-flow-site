@@ -1,3 +1,5 @@
+import { apiBaseUrl } from "@/_constants/environment";
+
 type AllTexts = { [key: string]: { [key: string]: string } };
 
 type Params = {
@@ -7,7 +9,7 @@ type Params = {
 }
 
 export default async function resolveTranslations(params: Params) {
-    const response = await fetch('http://localhost:3000/api/resolve-translations', {
+    const response = await fetch(`${apiBaseUrl}/api/resolve-translations`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',

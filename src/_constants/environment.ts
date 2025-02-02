@@ -1,0 +1,1 @@
+export const apiBaseUrl = process.env.NODE_ENV === 'production' ? 'https://english-flow-site.vercel.app' : 'http://localhost:3000';

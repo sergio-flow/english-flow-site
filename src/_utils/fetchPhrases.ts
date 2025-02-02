@@ -1,3 +1,5 @@
+import { apiBaseUrl } from "@/_constants/environment";
+
 type Params = {
     countryCode: string;
     languageCode: string;
@@ -13,7 +15,7 @@ export default async function fetchPhrases(params: Params) {
 
     const query = new URLSearchParams(cleanParams).toString();
 
-    const response = await fetch('http://localhost:3000/api/fetch-phrases?' + query);
+    const response = await fetch(`${apiBaseUrl}/api/fetch-phrases?` + query);
 
     const { phrases } = await response.json();
 
