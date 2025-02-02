@@ -55,18 +55,18 @@ export default function CardFooter(params: Params) {
 
             <div className="columns-2 items-center gap-4 mt-2 bg-black/20 border-t border-gray-700 rounded-bl-lg rounded-br-lg mt-auto">
                 <div onClick={() => setShowStudyModal(true)} className="flex items-center gap-2 p-2 justify-center cursor-pointer hover:bg-white/5">
-                    {studyIcon(24, 24, "fill-white/60")} <span className="text-xs font-semibold uppercase text-white/40">{texts.study}</span>
+                    {studyIcon(24, 24, "fill-white/60")} <span className="text-[10px] font-bold uppercase text-white/40">{texts.study}</span>
                 </div>
 
                 {!isRecording && (
                     <div onClick={() => startRecording()} className="flex items-center gap-2 p-2 justify-center cursor-pointer hover:bg-white/5">
-                        {recordIcon(24, 24, "fill-white/60")} <span className="text-xs font-semibold uppercase text-white/40">{texts.record}</span>
+                        {recordIcon(24, 24, "fill-white/60")} <span className="text-[10px] font-bold uppercase text-white/40">{texts.record}</span>
                     </div>
                 )}
 
                 {isRecording && (
                     <div onClick={() => stopRecording()} className="flex items-center gap-2 p-2 justify-center cursor-pointer bg-sky-400">
-                        {stopIcon(24, 24, "fill-white")} <span className="text-xs font-semibold uppercase text-white">{texts.recording}</span>
+                        {stopIcon(24, 24, "fill-white")} <span className="text-[10px] font-bold uppercase text-white">{texts.recording}</span>
                     </div>
                 )}
 

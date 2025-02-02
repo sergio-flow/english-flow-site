@@ -25,11 +25,11 @@ export default function CardHeader(params: Params) {
             </div>
 
             <div className="flex-1">
-                <h3 className="text-md leading-5 font-semibold text-white">
+                <h3 className="text-sm leading-5 text-white">
                     {shortDescription}
                 </h3>
 
-                <div className="text-sm text-gray-400 flex items-center gap-2 mt-1">
+                <div className="text-xs text-gray-400 flex items-center gap-2 mt-1">
                     {accent === 'american' && (
                         <><i className={`em em-us`} /> <span>{texts.american}</span></>
                     )}
