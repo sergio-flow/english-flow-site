@@ -74,7 +74,7 @@ export default function Filter(params: Params) {
             <DisclosurePanel className="pt-6">
                 <div className="space-y-4">
                     {options.map((option) => (
-                        <Link href={generateOptionUrl(option.value)} key={option.value} className={`flex my-[5px] items-center py-[5px] px-[10px] mx-[-10px] rounded-4xl text-md text-white pr-[40px] flex-1 relative gap-3 ${queryValues === option.value ? "bg-white/10" : "hover:bg-white/10"}`}>
+                        <Link href={generateOptionUrl(option.value)} key={option.value} className={`flex my-[5px] items-center py-[5px] px-[10px] mx-[-10px] rounded-4xl text-sm text-white pr-[40px] flex-1 relative gap-3 ${queryValues === option.value ? "bg-white/10" : "hover:bg-white/10"}`}>
                             {option.emoji && (
                                 <i className={`em ${option.emoji} text-md`} />
                             )}
