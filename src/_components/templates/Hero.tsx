@@ -20,7 +20,7 @@ export default function Hero(params: Params) {
                 <span className="text-white text-lg">→</span>
                 <div className="flex items-center rounded-lg bg-white/10">
                     {Object.keys(availableLanguages).map((key, index) => (
-                        <Link key={key} href={`/${countryCode}/${key}`} className={`${index === 0 ? "rounded-l-lg" : ""} ${index === Object.keys(availableLanguages).length - 1 ? "rounded-r-lg" : ""} cursor-pointer text-white py-1 px-2 font-semibold text-md ${key === languageCode ? 'bg-orange-400' : ''}`}>{availableLanguages[key]}</Link>
+                        <Link key={key} href={`/${countryCode}/${key}`} className={`${index === 0 ? "rounded-l-lg" : ""} ${index === Object.keys(availableLanguages).length - 1 ? "rounded-r-lg" : ""} cursor-pointer text-white py-1 px-2 font-semibold text-xs ${key === languageCode ? 'bg-orange-400' : ''}`}>{availableLanguages[key]}</Link>
                     ))}
                 </div>
             </div>
