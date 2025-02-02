@@ -25,8 +25,8 @@ export default function Hero(params: Params) {
                 </div>
             </div>
 
-            <h1 className="text-5xl font-semibold text-white mb-6 mt-4">{texts.title}</h1>
-            <h2 className="text-2xl leading-10 text-white/40">
+            <h1 className="text-4xl font-semibold text-white mb-3 mt-4">{texts.title}</h1>
+            <h2 className="text-xl leading-8 text-white/40">
                 {texts.description1}
                 <br />
                 {texts.description2}
