@@ -1,21 +1,14 @@
 import {
-    Dialog,
-    DialogBackdrop,
-    DialogPanel,
     Disclosure,
     DisclosureButton,
     DisclosurePanel,
-    Menu,
-    MenuButton,
-    MenuItem,
-    MenuItems,
 } from '@headlessui/react'
-import { XMarkIcon } from '@heroicons/react/24/outline'
-import { ChevronDownIcon, FunnelIcon, MinusIcon, PlusIcon, Squares2X2Icon } from '@heroicons/react/20/solid'
-import { checkboxIcon } from "../atoms/Icons";
-import { redirect } from 'next/navigation'
+import { MinusIcon, PlusIcon } from '@heroicons/react/20/solid'
 import Link from 'next/link';
-
+import VolumePhrases from './VolumePhrases';
+import VolumeRecordings from './VolumeRecordings';
+import Image from 'next/image';
+import TypePhrase from '@/_types/TypePhrase';
 
 type Params = {
     id: string;
@@ -23,36 +16,49 @@ type Params = {
     options: {
         value: string;
         label: string;
-        checked: boolean;
+        emoji?: string;
+        image?: string;
     }[];
-    searchParams: any;
+    searchParams: { [key: string]: string };
+    phrases: TypePhrase[];
 }
 
 export default function Filter(params: Params) {
-    const { id, name, options, searchParams } = params;
+    const { id, name, options, searchParams, phrases } = params;
 
-    const queryValues = searchParams[id] ? decodeURIComponent(searchParams[id]).split(",") : []
-    console.log("qv", queryValues)
+    const queryValues = searchParams[id] ? decodeURIComponent(searchParams[id]) : []
 
     const generateOptionUrl = (option: string) => {
-        const newOptionValue = queryValues.includes(option)
-            ? queryValues.filter((value: any) => value !== option).join(",")
-            : [...queryValues, option].join(",")
+        const newOptionValue = queryValues === option ? null : option
 
-        const currentSearchParams: any = {}
+        const currentSearchParams: { [key: string]: string } = {}
 
         for (const key in searchParams) {
             if (!searchParams[key]) continue
             currentSearchParams[key] = searchParams[key]
         }
 
-        const newSearchParams = {
-            ...currentSearchParams,
-            [id]: newOptionValue
+        if (newOptionValue) {
+            currentSearchParams[id] = newOptionValue
+        } else {
+            delete currentSearchParams[id]
         }
 
-        return `?${new URLSearchParams(newSearchParams).toString()}`
+        return `?${new URLSearchParams(currentSearchParams).toString()}`
     }
+
+    const countPhrases = (id: string, value: string) => {
+        return phrases.filter((phrase: TypePhrase) => {
+            const phraseEntries = Object.entries(phrase)
+
+            const hasValue = phraseEntries.find(([key, val]) => {
+                return key === id && val === value
+            })
+
+            return hasValue
+        }).length
+    }
+
 
     return (
         <Disclosure defaultOpen={true} key={id} as="div" className="border-b border-white/20 py-6">
@@ -67,31 +73,26 @@ export default function Filter(params: Params) {
             </h3>
             <DisclosurePanel className="pt-6">
                 <div className="space-y-4">
-                    {options.map((option, optionIdx) => (
-                        <Link href={generateOptionUrl(option.value)} key={option.value} className="flex items-center gap-3">
-                            <div className="flex h-5 shrink-0 items-center">
-                                <div className="group grid size-5 grid-cols-1">
-                                    <input
-                                        defaultValue={option.value}
-                                        defaultChecked={queryValues.includes(option.value)}
-                                        id={`filter-${id}-${optionIdx}`}
-                                        name={`${id}[]`}
-                                        type="checkbox"
-                                        className="col-start-1 row-start-1 appearance-none rounded-sm border border-gray-300 bg-white checked:border-orange-400 checked:bg-orange-400 indeterminate:border-indigo-600 indeterminate:bg-indigo-600 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 disabled:border-gray-300 disabled:bg-gray-100 disabled:checked:bg-gray-100 forced-colors:appearance-auto"
-                                    />
+                    {options.map((option) => (
+                        <Link href={generateOptionUrl(option.value)} key={option.value} className={`flex my-[5px] items-center py-[5px] px-[10px] mx-[-10px] rounded-4xl text-md text-white pr-[40px] flex-1 relative gap-3 ${queryValues === option.value ? "bg-white/10" : "hover:bg-white/10"}`}>
+                            {option.emoji && (
+                                <i className={`em ${option.emoji} text-md`} />
+                            )}
 
-                                    {checkboxIcon()}
-                                </div>
-                            </div>
-                            <label htmlFor={`filter-${id}-${optionIdx}`} className="text-md text-white pb-[1px] pr-[40px] flex-1 relative">
-                                {option.label} ({queryValues.includes(option.value) ? 'checked' : 'unchecked'})
+                            {option.image && (
+                                <Image width={25} height={25} src={option.image} alt={option.label} className="w-[25px] h-[25px] rounded-2xl" />
+                            )}
 
-                                <span className="text-xs text-gray-400 ml-2 text-center leading-[25px] w-[25px] h-[25px] absolute font-bold text-white rounded-2xl bg-gray-700 top-0 bottom-0 right-[0px]">
-                                    12
-                                </span>
-                            </label>
+                            {option.label}
+
+                            <span className="text-xs text-gray-400 ml-2 text-center leading-[25px] w-[25px] h-[25px] absolute font-bold text-white rounded-2xl bg-gray-700 top-auto bottom-auto right-[5px]">
+                                {countPhrases(id, option.value)}
+                            </span>
                         </Link>
                     ))}
+
+                    {id === 'volume_phrases' && <VolumePhrases />}
+                    {id === 'volume_recordings' && <VolumeRecordings />}
                 </div>
             </DisclosurePanel>
         </Disclosure>

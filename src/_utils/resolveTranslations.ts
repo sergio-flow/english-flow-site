@@ -17,5 +17,17 @@ export default async function resolveTranslations(params: Params) {
 
     const { allTexts } = await response.json();
 
-    return allTexts;
+    const newObjToReturn: TranslationsObject = {}
+
+    for (const text of allTexts) {
+        newObjToReturn[text.name] = text.translated_json;
+    }
+
+    return newObjToReturn;
+}
+
+type TranslationsObject = {
+    [key: string]: {
+        [key: string]: string;
+    }
 }

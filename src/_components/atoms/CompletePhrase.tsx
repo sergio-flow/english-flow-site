@@ -1,20 +1,22 @@
 "use client"
 
 import { useEffect, useState } from "react";
-import { checkIcon, playIcon, stopIcon } from "./Icons";
+import { checkFullIcon, checkIcon } from "./Icons";
 
 type Params = {
-    phraseId: string;
+    phraseId: number;
 }
 
 export default function CompletePhrase(params: Params) {
     const [isCompleted, setIsCompleted] = useState(false);
 
     useEffect(() => {
+        if (!params.phraseId) return;
+        
         if (localStorage.getItem(`phrase-${params.phraseId}-completed`)) {
             setIsCompleted(true);
         }
-    }, []);
+    }, [params.phraseId]);
 
     const handleComplete = () => {
         if (isCompleted) {
@@ -26,9 +28,17 @@ export default function CompletePhrase(params: Params) {
         }
     }
 
+    if (isCompleted) {
+        return (
+            <button onClick={handleComplete} className={`text-xs cursor-pointer rounded-lg`}>
+                {checkFullIcon(30, 30, "fill-emerald-400")}
+            </button>
+        )
+    }
+
     return (
         <button onClick={handleComplete} className={`text-xs cursor-pointer rounded-lg`}>
-            {checkIcon(24, 24, isCompleted ? "stroke-emerald-400" : "stroke-white")}
+            {checkIcon(30, 30, "stroke-white")}
         </button>
     )
 }

@@ -1,6 +1,6 @@
-import { Dialog, DialogBackdrop, DialogPanel, DialogTitle } from '@headlessui/react'
+import { Dialog, DialogBackdrop, DialogPanel } from '@headlessui/react'
+import Image from 'next/image';
 import Markdown from 'react-markdown'
-import { useState } from 'react'
 
 type Params = {
     open: boolean;
@@ -28,7 +28,9 @@ export default function StudyModal(params: Params) {
                         </button>
 
                         <div className="sm:mx-auto sm:w-full sm:max-w-sm mb-8">
-                            <img
+                            <Image
+                                width={56}
+                                height={56}
                                 alt="English Flow"
                                 src="/logo.png"
                                 className="mx-auto h-14 w-auto"
@@ -39,23 +41,23 @@ export default function StudyModal(params: Params) {
                             className={"text-white"}
                             components={{
                                 ul(props) {
-                                    const { node, ...rest } = props
+                                    const { node, ...rest } = props // eslint-disable-line @typescript-eslint/no-unused-vars
                                     return <ul className="list-inside list-disc text-left text-white mb-2" {...rest} />
                                 },
                                 h1: function h1(props) {
-                                    const { node, ...rest } = props
+                                    const { node, ...rest } = props // eslint-disable-line @typescript-eslint/no-unused-vars
                                     return <h1 className="text-xl font-semibold text-white mt-4 mb-2" {...rest} />
                                 },
                                 h2(props) {
-                                    const { node, ...rest } = props
+                                    const { node, ...rest } = props // eslint-disable-line @typescript-eslint/no-unused-vars
                                     return <h2 className="text-lg font-semibold text-white mt-4 mb-2" {...rest} />
                                 },
                                 h3(props) {
-                                    const { node, ...rest } = props
+                                    const { node, ...rest } = props // eslint-disable-line @typescript-eslint/no-unused-vars
                                     return <h3 className="text-sm font-semibold text-white/40 uppercase mt-4 mb-2" {...rest} />
                                 },
                                 hr(props) {
-                                    const { node, ...rest } = props
+                                    const { node, ...rest } = props // eslint-disable-line @typescript-eslint/no-unused-vars
                                     return <hr className="border-t border-white/20 my-6" {...rest} />
                                 },
                             }}

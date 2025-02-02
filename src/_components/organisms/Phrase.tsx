@@ -1,13 +1,15 @@
+import TypePhrase from "@/_types/TypePhrase";
 import CardContent from "../molecules/CardContent";
 import CardFooter from "../molecules/CardFooter";
 import CardHeader from "../molecules/CardHeader";
 
 type Params = {
-    phrase: any
+    phrase: TypePhrase;
+    texts: { [key: string]: string };
 }
 
 export default function Phrase(params: Params) {
-    const { phrase: phraseObject } = params
+    const { phrase: phraseObject, texts } = params
 
     const {
         id,
@@ -20,9 +22,9 @@ export default function Phrase(params: Params) {
 
     return (
         <div className="rounded-lg border shadow-sm bg-gray-800 border-gray-700 flex flex-col gap-4 mb-2">
-            <CardHeader phraseId={id} accent={accent} gender={gender} shortDescription={shortDescription} />
+            <CardHeader texts={texts} phraseId={id} accent={accent} gender={gender} shortDescription={shortDescription} />
             <CardContent audio={audio} phrase={phrase} />
-            <CardFooter />
+            <CardFooter texts={texts} />
         </div>
     )
 }

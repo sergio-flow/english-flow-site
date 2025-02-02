@@ -9,7 +9,7 @@ export default function CardContent(params: Params) {
     const { audio, phrase } = params
 
     return (
-        <div className='flex items-start gap-2 mt-1 mb-4 px-4'>
+        <div className='flex items-start gap-2 mb-4 px-4'>
             <div className='w-[35px] align-center justify-center flex'>
                 <PlayPhrase audio={audio} />
             </div>

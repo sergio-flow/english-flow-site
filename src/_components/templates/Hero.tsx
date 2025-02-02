@@ -1,20 +1,32 @@
-export default function Hero() {
+import Link from "next/link"
+
+type Params = {
+    countryCode: string;
+    languageCode: string;
+    availableLanguages: { [key: string]: string };
+    texts: { [key: string]: string };
+}
+
+export default function Hero(params: Params) {
+    const { countryCode, languageCode, availableLanguages, texts } = params
+
     return (
         <div className="w-[1440px] mx-auto px-4 py-6 gap-10 mb-6">
             <div className="country-language flex items-center gap-4 mb-10">
-                <div className="flex cursor-pointer items-center gap-2 p-1 px-2 pr-3 rounded-lg bg-white/10">
+                <Link href={`/${countryCode}`} className="flex cursor-pointer items-center gap-2 p-1 px-2 pr-3 rounded-lg bg-white/10">
                     <span className="em em-flag-md" />
                     <span className="text-white font-semibold text-md">Moldova</span>
-                </div>
+                </Link>
                 <span className="text-white text-lg">→</span>
                 <div className="flex items-center rounded-lg bg-white/10">
-                    <div className="rounded-l-lg cursor-pointer text-white py-1 px-2 font-semibold text-md bg-orange-400">Română</div>
-                    <div className="rounded-r-lg cursor-pointer text-white py-1 px-2 font-semibold text-md">Русский</div>
+                    {Object.keys(availableLanguages).map((key, index) => (
+                        <Link key={key} href={`/${countryCode}/${key}`} className={`${index === 0 ? "rounded-l-lg" : ""} ${index === Object.keys(availableLanguages).length - 1 ? "rounded-r-lg" : ""} cursor-pointer text-white py-1 px-2 font-semibold text-md ${key === languageCode ? 'bg-orange-400' : ''}`}>{availableLanguages[key]}</Link>
+                    ))}
                 </div>
             </div>
 
-            <h1 className="text-4xl font-semibold text-white mb-4 mt-4">{texts.title}</h1>
-            <h2 className="text-2xl leading-[2xl] text-white/40">
+            <h1 className="text-5xl font-semibold text-white mb-6 mt-4">{texts.title}</h1>
+            <h2 className="text-2xl leading-10 text-white/40">
                 {texts.description1}
                 <br />
                 {texts.description2}
@@ -31,7 +43,7 @@ export default function Hero() {
 }
 
 export const texts = {
-    title: 'Practice common phrases in English',
+    title: 'Database of English phrases',
     description1: '1. Understand English by studying phrases individually.',
     description2: '2. Improve your speaking skills by recording your voice.',
 }

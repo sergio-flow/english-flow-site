@@ -1,7 +1,6 @@
 "use client"
 
 import mediaUrl from "@/_utils/mediaUrl";
-import { useEffect } from "react";
 import { useAudioPlayer } from "react-use-audio-player";
 import { playIcon, stopIcon } from "./Icons";
 
@@ -12,12 +11,15 @@ type Params = {
 export default function PlayPhrase(params: Params) {
     const audioPlayer = useAudioPlayer()
 
-    useEffect(() => {
+    const playBit = () => {
+        const volume = localStorage.getItem('volume_phrases');
         audioPlayer.load(mediaUrl(params.audio), {
             format: 'mp3',
             autoplay: false,
+            initialVolume: volume ? parseFloat(volume) / 100 : 0.4
         });
-    }, []);
+        audioPlayer.play()
+    }
 
     if (audioPlayer.playing) {
         return (
@@ -26,8 +28,9 @@ export default function PlayPhrase(params: Params) {
             </button>
         )
     }
+
     return (
-        <button className="cursor-pointer" onClick={() => audioPlayer.play()}>
+        <button className="cursor-pointer" onClick={() => playBit()}>
             {playIcon(35, 35)}
         </button>
     )
