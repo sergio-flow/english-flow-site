@@ -13,6 +13,9 @@ import {
 import { XMarkIcon } from '@heroicons/react/24/outline'
 import { ChevronDownIcon, FunnelIcon, MinusIcon, PlusIcon, Squares2X2Icon } from '@heroicons/react/20/solid'
 import { checkboxIcon } from "../atoms/Icons";
+import { redirect } from 'next/navigation'
+import Link from 'next/link';
+
 
 type Params = {
     id: string;
@@ -22,10 +25,34 @@ type Params = {
         label: string;
         checked: boolean;
     }[];
+    searchParams: any;
 }
 
 export default function Filter(params: Params) {
-    const { id, name, options } = params
+    const { id, name, options, searchParams } = params;
+
+    const queryValues = searchParams[id] ? decodeURIComponent(searchParams[id]).split(",") : []
+    console.log("qv", queryValues)
+
+    const generateOptionUrl = (option: string) => {
+        const newOptionValue = queryValues.includes(option)
+            ? queryValues.filter((value: any) => value !== option).join(",")
+            : [...queryValues, option].join(",")
+
+        const currentSearchParams: any = {}
+
+        for (const key in searchParams) {
+            if (!searchParams[key]) continue
+            currentSearchParams[key] = searchParams[key]
+        }
+
+        const newSearchParams = {
+            ...currentSearchParams,
+            [id]: newOptionValue
+        }
+
+        return `?${new URLSearchParams(newSearchParams).toString()}`
+    }
 
     return (
         <Disclosure defaultOpen={true} key={id} as="div" className="border-b border-white/20 py-6">
@@ -41,12 +68,12 @@ export default function Filter(params: Params) {
             <DisclosurePanel className="pt-6">
                 <div className="space-y-4">
                     {options.map((option, optionIdx) => (
-                        <div key={option.value} className="flex items-center gap-3">
+                        <Link href={generateOptionUrl(option.value)} key={option.value} className="flex items-center gap-3">
                             <div className="flex h-5 shrink-0 items-center">
                                 <div className="group grid size-5 grid-cols-1">
                                     <input
                                         defaultValue={option.value}
-                                        defaultChecked={option.checked}
+                                        defaultChecked={queryValues.includes(option.value)}
                                         id={`filter-${id}-${optionIdx}`}
                                         name={`${id}[]`}
                                         type="checkbox"
@@ -57,16 +84,16 @@ export default function Filter(params: Params) {
                                 </div>
                             </div>
                             <label htmlFor={`filter-${id}-${optionIdx}`} className="text-md text-white pb-[1px] pr-[40px] flex-1 relative">
-                                {option.label}
+                                {option.label} ({queryValues.includes(option.value) ? 'checked' : 'unchecked'})
 
                                 <span className="text-xs text-gray-400 ml-2 text-center leading-[25px] w-[25px] h-[25px] absolute font-bold text-white rounded-2xl bg-gray-700 top-0 bottom-0 right-[0px]">
                                     12
                                 </span>
                             </label>
-                        </div>
+                        </Link>
                     ))}
                 </div>
             </DisclosurePanel>
         </Disclosure>
-    )
+    );
 }

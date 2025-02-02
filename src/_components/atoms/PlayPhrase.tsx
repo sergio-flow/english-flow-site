@@ -21,7 +21,7 @@ export default function PlayPhrase(params: Params) {
 
     if (audioPlayer.playing) {
         return (
-            <button className="cursor-pointer" onClick={() => audioPlayer.pause()}>
+            <button className="cursor-pointer" onClick={() => audioPlayer.stop()}>
                 {stopIcon(35, 35)}
             </button>
         )

@@ -1,17 +1,19 @@
 import Image from "next/image";
-import { translateIcon } from "../atoms/Icons";
+import { checkIcon, translateIcon } from "../atoms/Icons";
+import CompletePhrase from "../atoms/CompletePhrase";
 
 type Params = {
+    phraseId: string;
     accent: string;
     gender: "male" | "female";
     shortDescription: string;
 }
 
 export default function CardHeader(params: Params) {
-    const { accent, gender, shortDescription } = params
+    const { phraseId, accent, gender, shortDescription } = params
 
     return (
-        <div className="flex items-center gap-4 mt-2 mb-2 pt-2 px-4">
+        <div className="flex items-top gap-4 mt-2 mb-1 pt-2 px-4">
             <div className='w-[49px]'>
                 <Image
                     width={49}
@@ -22,12 +24,12 @@ export default function CardHeader(params: Params) {
                 />
             </div>
 
-            <div>
-                <h3 className="text-lg font-semibold text-white">
+            <div className="flex-1">
+                <h3 className="text-md leading-5 font-semibold text-white">
                     {shortDescription}
                 </h3>
 
-                <div className="text-sm text-gray-400 flex items-center gap-2">
+                <div className="text-sm text-gray-400 flex items-center gap-2 mt-1">
                     {accent === 'american' && (
                         <><i className={`em em-us`} /> <span>American English</span></>
                     )}
@@ -38,11 +40,9 @@ export default function CardHeader(params: Params) {
                 </div>
             </div>
 
-            {/* {languageCode !== 'en' && (
-                <button onClick={() => setExpandTranslations(p => !p)} className={`text-xs ${expandTranslations ? 'bg-sky-200' : 'hover:bg-white/10'} p-2 rounded-lg ml-auto mr-2 font-semibold uppercase text-gray-600 hover:text-orange-500`}>
-                    {translateIcon(34, 34, expandTranslations ? "fill-black" : "fill-sky-200")}
-                </button>
-            )} */}
+            <div className="w-[24px]">
+                <CompletePhrase phraseId={phraseId} />
+            </div>
         </div>
     )
 }

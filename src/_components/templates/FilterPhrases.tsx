@@ -1,26 +1,29 @@
+import { access } from "fs";
 import Filter from "../molecules/Filter";
 import Phrase from "../organisms/Phrase";
 
 type Params = {
     phrases: any[];
+    searchParams: any;
 }
 
 export default function Phrases(params: Params) {
-    const { phrases } = params
+    const { phrases, searchParams } = params
 
     return (
         <div className="flex w-[1440px] mx-auto px-4 py-6 gap-10">
             <div className="w-[280px]">
-                {filters.map((filter, filterIdx) => (
+                {filters(texts).map((filter, filterIdx) => (
                     <Filter
                         {...filter}
                         key={filter.id}
+                        searchParams={searchParams}
                     />
                 ))}
             </div>
 
             <div className="flex-1">
-                <div className="columns-3 gap-8">
+                <div className="grid grid-cols-3 gap-8">
                     {phrases.map((phrase, phraseIdx) => (
                         <Phrase phrase={phrase} key={phraseIdx} />
                     ))}
@@ -35,48 +38,57 @@ export default function Phrases(params: Params) {
     )
 }
 
-const filters = [
+export const texts = {
+    gender: "Gender",
+    male: "Male",
+    female: "Female",
+    accent: "Accent",
+    american: "American English",
+    british: "British English",
+    conversation: "Conversation",
+    start: "Start a conversation",
+    maintain: "Maintain a conversation",
+    deeper: "Get deeper",
+    change: "Change the topic",
+    jumpin: "Jump in",
+    clear: "Clear things up",
+    disagree: "Disagree respectfully",
+    agree: "Agree and supporting",
+    end: "End a conversation",
+}
+
+type Texts = typeof texts
+
+const filters = (texts: Texts) => ([
     {
-        id: "by-gender",
-        name: "Gender",
+        id: "gender",
+        name: texts.gender,
         options: [
-            { value: 'male', label: 'Male 👨', checked: true },
-            { value: 'female', label: 'Female 👩‍🦰', checked: true },
+            { value: 'male', label: `${texts.male} 👨`, checked: true },
+            { value: 'female', label: `${texts.female} 👩‍🦰`, checked: true },
         ]
     },
     {
-        id: "by-accent",
-        name: "Accent",
+        id: "accent",
+        name: texts.accent,
         options: [
-            { value: 'american', label: 'American English 🇺🇸', checked: true },
-            { value: 'british', label: 'British English 🇬🇧', checked: true },
+            { value: 'american', label: `${texts.american} 🇺🇸`, checked: true },
+            { value: 'british', label: `${texts.british} 🇬🇧`, checked: true },
         ]
     },
     {
-        id: "by-conversation",
-        name: "Conversation",
+        id: "conversation",
+        name: texts.conversation,
         options: [
-            { value: 'starting', label: 'Starting a Conversation ✨', checked: true },
-            { value: 'keeping', label: 'Continuing the Dialogue 💬', checked: true },
-            { value: 'deeper', label: 'Getting Deeper ❤️‍🔥', checked: true },
-            { value: 'changing', label: 'Changing the Topic 🌈', checked: true },
-            { value: 'jumping', label: 'Jumping In 🙋‍♀️', checked: true },
-            { value: 'clearing', label: 'Clearing Things Up 🤔', checked: true },
-            { value: 'disagreeing', label: 'Disagreeing Respectfully 💞', checked: true },
-            { value: 'agreeing', label: 'Agreeing and Supporting 🤗', checked: true },
-            { value: 'ending', label: 'Ending a Conversation 🌙', checked: true },
+            { value: 'start', label: `${texts.start} ✨`, checked: true },
+            { value: 'maintain', label: `${texts.maintain} 💬`, checked: true },
+            { value: 'deeper', label: `${texts.deeper} ❤️‍🔥`, checked: true },
+            { value: 'change', label: `${texts.change} 🌈`, checked: true },
+            { value: 'jumpin', label: `${texts.jumpin} 🙋‍♀️`, checked: true },
+            { value: 'clear', label: `${texts.clear} 🤔`, checked: true },
+            { value: 'disagree', label: `${texts.disagree} 💞`, checked: true },
+            { value: 'agree', label: `${texts.agree} 🤗`, checked: true },
+            { value: 'end', label: `${texts.end} 🌙`, checked: true },
         ]
     },
-    // {
-    //     id: "by-emotion",
-    //     name: "Expressing something",
-    //     options: [
-    //         { value: 'white', label: 'Expressing anger', checked: false },
-    //         { value: 'beige', label: 'Expressing disgust', checked: false },
-    //         { value: 'blue', label: 'Expressing gratitude', checked: true },
-    //         { value: 'brown', label: 'Expressing love', checked: false },
-    //         { value: 'green', label: 'Expressing action', checked: false },
-    //         { value: 'purple', label: 'Expressing intention', checked: false },
-    //     ]
-    // },
-]
+])
