@@ -11,7 +11,7 @@ export default function Hero(params: Params) {
     const { countryCode, languageCode, availableLanguages, texts } = params
 
     return (
-        <div className="w-[1440px] mx-auto px-4 py-6 gap-10 mb-6">
+        <div className="w-[1340px] mx-auto px-4 py-6 gap-10 mb-6">
             <div className="country-language flex items-center gap-4 mb-10">
                 <Link href={`/${countryCode}`} className="flex cursor-pointer items-center gap-2 p-1 px-2 pr-3 rounded-lg bg-white/10">
                     <span className="em em-flag-md" />

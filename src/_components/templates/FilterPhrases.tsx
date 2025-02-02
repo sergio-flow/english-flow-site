@@ -12,7 +12,7 @@ export default function Phrases(params: Params) {
     const { phrases, searchParams, texts } = params
 
     return (
-        <div className="flex w-[1440px] mx-auto px-4 gap-10">
+        <div className="flex w-[1340px] mx-auto px-4 gap-10">
             <div className="w-[280px] my-[-30px]">
                 {filters(texts).map((filter) => (
                     <Filter

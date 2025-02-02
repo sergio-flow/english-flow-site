@@ -10,7 +10,7 @@ export default function Navbar(params: Params) {
 
     return (
         <div className=" mb-10 border-b border-white/10">
-            <div className="flex w-[1440px] mx-auto px-4 py-4 gap-10">
+            <div className="flex w-[1340px] mx-auto px-4 py-4 gap-10">
                 <Link href="/" className="flex align-center items-center gap-4">
                     <Image
                         width={40}
