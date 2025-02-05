@@ -1,4 +1,5 @@
 import OpenAI from "openai";
+import * as deepl from 'deepl-node';
 import type { VercelRequest, VercelResponse } from '@vercel/node';
 import { createClient } from "@supabase/supabase-js";
 
@@ -18,6 +19,22 @@ type Variables = {
     countryCode: string;
     languageCode: string;
 }
+
+const authKey = <string>process.env.DEEPL_API_KEY;
+const translator = new deepl.Translator(authKey);
+
+const translate = (englishText: string, target: deepl.TargetLanguageCode) => new Promise((resolve, reject) => {
+    translator.translateText(englishText, "en", target)
+        .then(({ text }) => {
+            resolve({
+                english_text: englishText,
+                translated_text: text
+            });
+        })
+        .catch((err) => {
+            reject(err);
+        });
+});
 
 export default async function handler(request: VercelRequest, response: VercelResponse) {
     const { phraseId, countryCode, languageCode } = request.body as Variables;
@@ -44,13 +61,13 @@ export default async function handler(request: VercelRequest, response: VercelRe
         word_groups: wordGroups
     } = phrase.data;
 
-    const wordsFromGroups = wordGroups.map((group: string) => group.split(" ")).flat();
+    // const wordsFromGroups = wordGroups.map((group: string) => group.split(" ")).flat();
 
     const texts = [
         // shortDescription,
         ...wordGroups,
         phraseText,
-        ...wordsFromGroups
+        // ...wordsFromGroups
     ]
 
     const translatedLines: any = await supabase
@@ -78,44 +95,15 @@ export default async function handler(request: VercelRequest, response: VercelRe
 
     const promises = [];
 
+    const lang = languageCode.toLowerCase() as deepl.TargetLanguageCode;
+
     if (!hasPhraseText) {
-        promises.push(
-            callOpenAI(
-                generateSentenceTranslation(phraseText, translateTo),
-                phraseText,
-                'sentence'
-            )
-        );
+        promises.push(translate(phraseText, lang))
     }
 
     if (!hasWordGroups) {
         for (const group of wordGroups) {
-            promises.push(
-                callOpenAI(
-                    generateWordGroupTranslation(group, translateTo, phraseText),
-                    group,
-                    'word_group'
-                )
-            );
-
-            const words = group.split(" ");
-            for (const word of words) {
-                promises.push(
-                    callOpenAI(
-                        generateWordTranslationPrompt(word, translateTo),
-                        word,
-                        'word'
-                    )
-                );
-
-                promises.push(
-                    callOpenAI(
-                        generateWordDescriptionTranslation(word, translateTo),
-                        word,
-                        'word_description'
-                    )
-                );
-            }
+            promises.push(translate(group, lang));
         }
     }
 
@@ -128,8 +116,7 @@ export default async function handler(request: VercelRequest, response: VercelRe
                 wordGroups,
                 translations: translatedLines.data.map((line: any) => ({
                     englishText: line.english_text,
-                    translatedText: line.translated_text,
-                    type: line.type
+                    translatedText: line.translated_text
                 }))
             })
         });
@@ -142,8 +129,7 @@ export default async function handler(request: VercelRequest, response: VercelRe
             target_country_code: countryCode.toUpperCase(),
             target_language_code: languageCode.toLowerCase(),
             english_text: translation.english_text,
-            translated_text: translation.translated_text,
-            type: translation.type
+            translated_text: translation.translated_text
         }
     });
 
@@ -165,8 +151,7 @@ export default async function handler(request: VercelRequest, response: VercelRe
             wordGroups,
             translations: combinedTranslations.map((line: any) => ({
                 englishText: line.english_text,
-                translatedText: line.translated_text,
-                type: line.type
+                translatedText: line.translated_text
             }))
         })
     });
@@ -175,38 +160,32 @@ export default async function handler(request: VercelRequest, response: VercelRe
 type MarkdownVars = {
     phraseText: string;
     wordGroups: string[];
-    translations: { englishText: string, translatedText: string, type: TextType }[];
+    translations: { englishText: string, translatedText: string }[];
 }
 
 const generateMarkdown = (vars: MarkdownVars) => {
-    const sentenceTranslation = (sentence: string) => vars.translations.find(({ englishText, type }) => englishText === sentence && type === 'sentence')?.translatedText
+    const sentenceTranslation = (sentence: string) => vars.translations.find(({ englishText }) => englishText === sentence)?.translatedText
 
     const wordGroupsToMarkdown = (wordGroups: string[]) => {
-        const wordGroupTranslation = (wordGroup: string) => vars.translations.find(({ englishText, type }) => englishText === wordGroup && type === 'word_group')?.translatedText
+        const wordGroupTranslation = (wordGroup: string) => vars.translations.find(({ englishText }) => englishText === wordGroup)?.translatedText
 
         return wordGroups.map((group, index) => {
-            const words = group.split(" ");
+            // const words = group.split(" ");
 
-            const wordDescription = (word: string) => vars.translations.find(({ englishText, type }) => englishText === word && type === 'word_description')?.translatedText
-            const wordExamples = (word: string) => vars.translations.find(({ englishText, type }) => englishText === word && type === 'word')?.translatedText
+            // const wordDescription = (word: string) => vars.translations.find(({ englishText, type }) => englishText === word && type === 'word_description')?.translatedText
+            // const wordExamples = (word: string) => vars.translations.find(({ englishText, type }) => englishText === word && type === 'word')?.translatedText
 
-            const wordEntries = words.map(word => `- **${word}**: ${wordDescription(word)}. (${wordExamples(word)})`).join("\n");
+            // const wordEntries = words.map(word => `- **${word}**: ${wordDescription(word)}. (${wordExamples(word)})`).join("\n");
 
-            return `## ${index + 1}. **${group}**:
-${wordEntries}
-
-= ${wordGroupTranslation(group)}\n
-\n`;
+            return `- **${group}** «${wordGroupTranslation(group)}»`;
         }).join("\n");
     }
 
-    return `
-${wordGroupsToMarkdown(vars.wordGroups)}
+    return `${wordGroupsToMarkdown(vars.wordGroups)}
+
 ---
 
-„${vars.phraseText}“
-=
-${sentenceTranslation(vars.phraseText)}
+**${vars.phraseText}** «${sentenceTranslation(vars.phraseText)}»
 `;
 }
 
@@ -229,15 +208,14 @@ const generateWordDescriptionTranslation = (word: string, language: string, whol
 Provide a 1-2 word grammar description of the word "${word}",
 such as "Adjective, Verb" using this context "${wholeSentence}",
 but in ${language}. If it's a verb, mention the tense, past, present or future.
-Return the response in Russian. 
+Return the response in ${language}. 
 Don't include any English in the response. 
 Don't wrap up the response in any symbols, or quotes.
 `
 
 const generateWordGroupTranslation = (wordGroup: string, language: string, wholeSentence?: string) => `
-Translate this part of the sentence "${wordGroup}" to ${language} using this context "${wholeSentence}".
-Return the response in ${language}. 
-Return only the translation of the "${wordGroup}", don't include the context in the response.
+Translate this part of the sentence "${wordGroup}" to ${language}.
+Return the response in ${language}.
 Don't include any English in the response. 
 Don't wrap up the response in any symbols, or quotes.
 `
