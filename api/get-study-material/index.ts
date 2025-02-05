@@ -226,16 +226,18 @@ Don't wrap up the response in any symbols, or quotes.
 `
 
 const generateWordDescriptionTranslation = (word: string, language: string, wholeSentence?: string) => `
-Provide a 2-4 word explanation of the word "${word}", about its use in the English langauge for speakers of the ${language} language trying to learn English. 
-Return the response in ${language}. 
+Provide a 1-2 word grammar description of the word "${word}",
+such as "Adjective, Verb" using this context "${wholeSentence}",
+but in ${language}. If it's a verb, mention the tense, past, present or future.
+Return the response in Russian. 
 Don't include any English in the response. 
-The whole response should be 2-4 words maximum. 
 Don't wrap up the response in any symbols, or quotes.
 `
 
 const generateWordGroupTranslation = (wordGroup: string, language: string, wholeSentence?: string) => `
-Translate this part of a sentence "${wordGroup}" to ${language}.
+Translate this part of the sentence "${wordGroup}" to ${language} using this context "${wholeSentence}".
 Return the response in ${language}. 
+Return only the translation of the "${wordGroup}", don't include the context in the response.
 Don't include any English in the response. 
 Don't wrap up the response in any symbols, or quotes.
 `
