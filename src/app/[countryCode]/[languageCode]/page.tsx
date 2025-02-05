@@ -29,8 +29,19 @@ export default async function Home(data: Data) {
   return (
     <>
       <Navbar texts={navbarTexts} />
-      <Hero texts={heroTexts} countryCode={countryCode} languageCode={languageCode} availableLanguages={availableLanguages} />
-      <FilterPhrases texts={filterPhrasesTexts} phrases={phrases} searchParams={{ gender, accent, conversation }} />
+      <Hero
+        texts={heroTexts}
+        countryCode={countryCode}
+        languageCode={languageCode}
+        availableLanguages={availableLanguages}
+      />
+      <FilterPhrases
+        countryCode={countryCode}
+        languageCode={languageCode}
+        texts={filterPhrasesTexts}
+        phrases={phrases}
+        searchParams={{ gender, accent, conversation }}
+      />
     </>
   );
 }

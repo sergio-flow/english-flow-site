@@ -21,7 +21,11 @@ type QueryParams = {
 export default async function handler(request: VercelRequest, response: VercelResponse) {
     const { countryCode, languageCode, gender, accent, conversation } = request.query as QueryParams;
 
-    let supabaseQuery = supabase.from('phrases').select('*')
+    let supabaseQuery = supabase
+        .from('phrases')
+        .select('*')
+        .not('word_groups', 'is', null)
+        .not('short_description', 'is', null)
 
     if (gender) supabaseQuery = supabaseQuery.eq('gender', gender)
     if (accent) supabaseQuery = supabaseQuery.eq('accent', accent)

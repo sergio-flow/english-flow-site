@@ -4,8 +4,12 @@ import { useRef, useState } from "react";
 import { useAudioPlayer } from 'react-use-audio-player';
 import { recordIcon, stopIcon, studyIcon } from "../atoms/Icons";
 import StudyModal from "../organisms/StudyModal";
+import TypePhrase from "@/_types/TypePhrase";
 
 type Params = {
+    countryCode: string;
+    languageCode: string;
+    phrase: TypePhrase;
     texts: {
         [key: string]: string;
     }
@@ -14,7 +18,7 @@ type Params = {
 export default function CardFooter(params: Params) {
     const [showStudyModal, setShowStudyModal] = useState(false)
 
-    const { texts } = params
+    const { countryCode, languageCode, phrase, texts } = params
 
     const { isRecording, startRecording, stopRecording, audioBlob } = useAudioRecorder();
 
@@ -76,7 +80,13 @@ export default function CardFooter(params: Params) {
             </div> */}
             </div>
 
-            <StudyModal open={showStudyModal} setOpen={setShowStudyModal} />
+            <StudyModal
+                countryCode={countryCode}
+                languageCode={languageCode}
+                phrase={phrase}
+                open={showStudyModal}
+                setOpen={setShowStudyModal}
+            />
         </>
     )
 }

@@ -3,13 +3,15 @@ import Phrase from "../organisms/Phrase";
 import TypePhrase from "@/_types/TypePhrase";
 
 type Params = {
+    countryCode: string;
+    languageCode: string;
     phrases: TypePhrase[];
     searchParams: { [key: string]: string };
     texts: { [key: string]: string }
 }
 
 export default function Phrases(params: Params) {
-    const { phrases, searchParams, texts } = params
+    const { countryCode, languageCode, phrases, searchParams, texts } = params
 
     return (
         <div className="flex w-[1340px] mx-auto px-4 gap-10">
@@ -27,7 +29,13 @@ export default function Phrases(params: Params) {
             <div className="flex-1">
                 <div className="grid grid-cols-3 gap-8 pb-20">
                     {phrases.map((phrase, phraseIdx) => (
-                        <Phrase texts={texts} phrase={phrase} key={`${phraseIdx}-${phrase.id}`} />
+                        <Phrase
+                            countryCode={countryCode}
+                            languageCode={languageCode}
+                            texts={texts}
+                            phrase={phrase}
+                            key={`${phraseIdx}-${phrase.id}`}
+                        />
                     ))}
                 </div>
             </div>
