@@ -190,7 +190,7 @@ const generateMarkdown = (vars: MarkdownVars) => {
             const wordDescription = (word: string) => vars.translations.find(({ englishText, type }) => englishText === word && type === 'word_description')?.translatedText
             const wordExamples = (word: string) => vars.translations.find(({ englishText, type }) => englishText === word && type === 'word')?.translatedText
 
-            const wordEntries = words.map(word => `- **${word}**: ${wordDescription(word)} (${wordExamples(word)})`).join("\n");
+            const wordEntries = words.map(word => `- **${word}**: ${wordDescription(word)}. ${wordExamples(word)}`).join("\n");
 
             return `## ${index + 1}. **${group}**:
 ${wordEntries}
