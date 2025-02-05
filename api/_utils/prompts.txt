@@ -1,0 +1,30 @@
+[PROMPT] Get the word translations:
+Provide a 1-2 translation examples of the word "made" for speakers of the Romanian language. 
+Return the response in Romanian. 
+Don't include any English in the response. 
+The whole response should be 1-2 words maximum. 
+Return in one line.
+Don't include the word "made" in the response, only the translations.
+If more words are returned, add a comma in between.
+Don't wrap up the response in any symbols, or quotes.
+
+[PROMPT] Get the translated word short description:
+Provide a 3-6 word explanation, description (+ grammar) of the word "made" for speakers of the Romanian language trying to learn English. 
+Return the response in Romanian. 
+Don't include any English in the response. 
+The whole response should be 3-6 words maximum. 
+Don't wrap up the response in any symbols, or quotes.
+
+[PROMPT] Get the word group translation:
+Translate this part of a sentence "looks good" to Romanian.
+Return the response in Romanian. 
+Translate only  "looks good". 
+Context of the whole sentence: "Oh my, this looks good on you".
+Don't include any English in the response. 
+Don't wrap up the response in any symbols, or quotes.
+
+[PROMPT] Get the sentence translations
+Translate this sentence "Oh my, this looks good on you" to Romanian.
+Return the response in Romanian. 
+Don't include any English in the response. 
+Don't wrap up the response in any symbols, or quotes.
