@@ -21,28 +21,29 @@ export default function StudyModal(params: Params) {
     const [loading, setLoading] = useState(false)
     const [studyMaterial, setStudyMaterial] = useState<string | null>(null)
 
+
     useEffect(() => {
+        const getStudyMaterial = async () => {
+            if (loading) return
+
+            setLoading(true)
+
+            const data = await fetch(`${apiBaseUrl}/api/get-study-material`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ countryCode, languageCode, phraseId: phrase.id }),
+            });
+
+            const { studyMaterial } = await data.json();
+
+            setStudyMaterial(studyMaterial)
+            setLoading(false)
+        }
+
         if (open) getStudyMaterial()
     }, [open, countryCode, languageCode, phrase])
-
-    const getStudyMaterial = async () => {
-        if (loading) return
-
-        setLoading(true)
-
-        const data = await fetch(`${apiBaseUrl}/api/get-study-material`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ countryCode, languageCode, phraseId: phrase.id }),
-        });
-
-        const { studyMaterial } = await data.json();
-
-        setStudyMaterial(studyMaterial)
-        setLoading(false)
-    }
 
     const handleClose = () => {
         setOpen(false)
@@ -122,33 +123,3 @@ export default function StudyModal(params: Params) {
         </Dialog>
     )
 }
-
-const test = `
-# Analiza frazei: "This is a picture of Mike Johnson, and his wife"
-
-## 1. **This is**
-- **This**: Pronume demonstrativ („acesta”/„aceasta”).
-- **is**: Forma de prezent a lui „to be” („este”).
-- **Combinație**: „Aceasta este”.
-
-## 2. **a picture**
-- **a**: Articol nehotărât („o”).
-- **picture**: Substantiv („imagine”/„fotografie”).
-- **Combinație**: „O imagine”/„O fotografie”.
-
-## 3. **of Mike Johnson**
-- **of**: Prepoziție („a lui”/„cu”).
-- **Mike Johnson**: Nume propriu („Mike Johnson”).
-- **Combinație**: „A lui Mike Johnson”.
-
-## 4. **and his wife**
-- **and**: Conjuncție („și”).
-- **his**: Pronume posesiv („a lui”).
-- **wife**: Substantiv („soție”).
-- **Combinație**: „Și soția lui”.
-
----
-
-### Traducere:
-**„This is a picture of Mike Johnson, and his wife”** = **„Aceasta este o fotografie a lui Mike Johnson și a soției lui”**.
-`
