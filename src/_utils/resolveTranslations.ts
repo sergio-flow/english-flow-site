@@ -3,8 +3,8 @@ import { apiBaseUrl } from "@/_constants/environment";
 type AllTexts = { [key: string]: { [key: string]: string } };
 
 type Params = {
-    countryCode: string;
-    languageCode: string;
+    countryCode?: string;
+    languageCode?: string;
     allTexts: AllTexts;
 }
 

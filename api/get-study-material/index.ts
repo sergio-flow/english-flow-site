@@ -23,8 +23,8 @@ type Variables = {
 const authKey = <string>process.env.DEEPL_API_KEY;
 const translator = new deepl.Translator(authKey);
 
-const translate = (englishText: string, target: deepl.TargetLanguageCode) => new Promise((resolve, reject) => {
-    translator.translateText(englishText, "en", target)
+const translate = (englishText: string, target: deepl.TargetLanguageCode, options?: deepl.TranslateTextOptions) => new Promise((resolve, reject) => {
+    translator.translateText(englishText, "en", target, options)
         .then(({ text }) => {
             resolve({
                 english_text: englishText,
@@ -103,7 +103,7 @@ export default async function handler(request: VercelRequest, response: VercelRe
 
     if (!hasWordGroups) {
         for (const group of wordGroups) {
-            promises.push(translate(group, lang));
+            promises.push(translate(group, lang, { context: phraseText }));
         }
     }
 
