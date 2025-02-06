@@ -23,7 +23,7 @@ export default function Phrase(params: Params) {
     } = phraseObject
 
     return (
-        <div className="rounded-lg border shadow-sm bg-gray-800 border-gray-700 flex flex-col gap-4 mb-2">
+        <div className="rounded-lg border shadow-sm bg-gray-800 border-gray-700 flex flex-col gap-4 mb-8 xl:mb-2">
             <CardHeader
                 texts={texts}
                 phraseId={id}

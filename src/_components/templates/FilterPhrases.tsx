@@ -14,8 +14,8 @@ export default function Phrases(params: Params) {
     const { countryCode, languageCode, phrases, searchParams, texts } = params
 
     return (
-        <div className="flex w-[1340px] mx-auto px-4 gap-10">
-            <div className="w-[280px] my-[-30px]">
+        <div className="xl:flex xl:w-[1340px] mx-auto px-4 gap-10">
+            <div className="w-[280px] my-[-30px] hidden xl:block">
                 {filters(texts).map((filter) => (
                     <Filter
                         {...filter}
@@ -27,7 +27,7 @@ export default function Phrases(params: Params) {
             </div>
 
             <div className="flex-1">
-                <div className="grid grid-cols-3 gap-8 pb-20">
+                <div className="xl:grid xl:grid-cols-3 xl:gap-8 pb-20">
                     {phrases.map((phrase, phraseIdx) => (
                         <Phrase
                             countryCode={countryCode}
