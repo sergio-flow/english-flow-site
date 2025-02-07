@@ -1,7 +1,4 @@
-import Navbar from "@/_components/templates/Navbar";
-import allTexts from "@/_utils/allTexts";
 import fetchLanguages from "@/_utils/fetchLanguages";
-import resolveTranslations from "@/_utils/resolveTranslations";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -25,7 +22,7 @@ export default async function Home() {
         <div className="py-4" key={continent.continentName}>
           <h1 className="text-white text-xl font-semibold text-center mb-2">{continent.continentName}</h1>
           <div className="grid grid-cols-2 gap-4 py-4">
-            {continent.countries.map((country, index) => {
+            {continent.countries.map((country) => {
               const countryCode = country.countryCode.toLowerCase()
               const languageCode = country.languages[0].languageCode.toLowerCase()
 

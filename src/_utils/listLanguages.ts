@@ -1,4 +1,11 @@
-const listLanguages: any = [
+type Language = {
+    code: string;
+    english_name: string;
+    local_name: string;
+    countries: string[];
+}
+
+const listLanguages: Language[] = [
     {
         code: 'AR',
         english_name: 'Arabic',

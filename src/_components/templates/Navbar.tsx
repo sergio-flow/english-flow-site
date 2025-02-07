@@ -20,7 +20,7 @@ export default function Navbar(params: Params) {
                         className="h-[40px] w-auto"
                     />
 
-                    <div className="text-sm w-[80px] md:w-auto uppercase font-bold text-white">{texts.name}</div>
+                    <div className="text-sm w-[80px] md:w-auto uppercase font-bold text-white">English Flow</div>
                 </Link>
 
                 <div className="flex items-center border-l border-white/10 pl-4">

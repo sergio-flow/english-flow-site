@@ -1,5 +1,6 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
 import { createClient } from "@supabase/supabase-js";
+import * as deepl from 'deepl-node';
 
 const projectID = process.env.SUPABASE_PROJECT_ID;
 const anonKey = process.env.SUPABASE_ANON_KEY;
@@ -12,24 +13,85 @@ const supabase = createClient(`https://${projectID}.supabase.co`, anonKey);
 
 type BodyParams = {
     countryCode: string;
-    languageCode: string;
+    languageCode: deepl.TargetLanguageCode;
     allTexts: any;
 }
 
 export default async function handler(request: VercelRequest, response: VercelResponse) {
     const { countryCode, languageCode, allTexts } = request.body as BodyParams;
 
+    let allTextValues: string[] = [];
+    for (const key in allTexts) {
+        allTextValues = [...allTextValues, ...Object.values(<string[]>allTexts[key])];
+    }
+
     const textKeys = Object.keys(allTexts);
 
-    const { data, error } = await supabase
-        .from('translations')
+    const translatedLines: any = await supabase
+        .from('translated_lines')
         .select('*')
-        .eq('target_country_code', countryCode)
-        .eq('target_language_code', languageCode)
-        .in('name', textKeys)
+        .eq('target_country_code', countryCode.toUpperCase())
+        .eq('target_language_code', languageCode.toLowerCase())
+        .in('english_text', allTextValues);
 
-    return response.status(200).json({ allTexts: data });
+    const missingTexts = allTextValues.filter((text) => !translatedLines.data.some((line: any) => line.english_text === text));
+
+    let translations: any = [];
+    if (missingTexts.length) {
+        console.log("Missing texts", missingTexts)
+
+        translations = await Promise.all(missingTexts.map((text) => translate(text, languageCode)));
+
+        const newTranslations = translations.map((translation: any) => {
+            return {
+                target_country_code: countryCode.toUpperCase(),
+                target_language_code: languageCode.toLowerCase(),
+                translated_text: translation.translated_text,
+                english_text: translation.english_text
+            }
+        });
+
+        await supabase.from('translated_lines').upsert(newTranslations);
+    }
+
+    const newTexts: any = {}
+
+    for (const key of textKeys) {
+        newTexts[key] = {}
+
+        for (const key2 in allTexts[key]) {
+            const text = allTexts[key][key2];
+
+            const translation: any = translations.find((t: any) => t.english_text === text);
+            if (translation) {
+                newTexts[key][key2] = translation.translated_text;
+            } else {
+                const line = translatedLines.data.find((line: any) => line.english_text === text);
+                if (line) {
+                    newTexts[key][key2] = line.translated_text;
+                }
+            }
+        }
+    }
+
+    return response.status(200).json({ allTexts: newTexts });
 }
+
+const authKey = <string>process.env.DEEPL_API_KEY;
+const translator = new deepl.Translator(authKey);
+
+const translate = (englishText: string, target: deepl.TargetLanguageCode, options?: deepl.TranslateTextOptions) => new Promise((resolve, reject) => {
+    translator.translateText(englishText, "en", target, options)
+        .then(({ text }) => {
+            resolve({
+                english_text: englishText,
+                translated_text: text
+            });
+        })
+        .catch((err) => {
+            reject(err);
+        });
+});
 
 // async function handler2(request, response) {
 //     const { editionDate, search } = request.query

@@ -1,5 +1,6 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
 import { createClient } from "@supabase/supabase-js";
+import * as deepl from 'deepl-node';
 
 const projectID = process.env.SUPABASE_PROJECT_ID;
 const anonKey = process.env.SUPABASE_ANON_KEY;
@@ -12,7 +13,7 @@ const supabase = createClient(`https://${projectID}.supabase.co`, anonKey);
 
 type QueryParams = {
     countryCode: string;
-    languageCode: string;
+    languageCode: deepl.TargetLanguageCode;
     gender: string;
     accent: string;
     conversation: string;
@@ -41,12 +42,33 @@ export default async function handler(request: VercelRequest, response: VercelRe
         .select('english_text,translated_text')
         .eq('target_country_code', countryCode.toUpperCase())
         .eq('target_language_code', languageCode.toLowerCase())
-        .in('english_text', uniqueShortDescriptions)
+        .in('english_text', shortDescriptions)
+
+    const missingTexts = uniqueShortDescriptions.filter((text) => !translations.some((line: any) => line.english_text === text));
+
+    let resolveNewTranslations: any = [];
+    if (missingTexts.length) {
+        console.log("Missing texts", missingTexts)
+        resolveNewTranslations = await Promise.all(missingTexts.map((text) => translate(text, languageCode)));
+
+        const newTranslations = resolveNewTranslations.map((translation: any) => {
+            return {
+                target_country_code: countryCode.toUpperCase(),
+                target_language_code: languageCode.toLowerCase(),
+                translated_text: translation.translated_text,
+                english_text: translation.english_text
+            }
+        });
+
+        await supabase.from('translated_lines').upsert(newTranslations);
+    }
+
+    const allTranslations = [...translations, ...resolveNewTranslations]
 
     return response.status(200).json({
         phrases: (data || []).map((phrase) => {
             const { short_description } = phrase
-            const translation = translations.find(({ english_text }: any) => english_text === short_description)
+            const translation = allTranslations.find(({ english_text }: any) => english_text === short_description)
             return {
                 ...phrase,
                 short_description: translation?.translated_text || short_description
@@ -54,6 +76,22 @@ export default async function handler(request: VercelRequest, response: VercelRe
         })
     });
 }
+
+const authKey = <string>process.env.DEEPL_API_KEY;
+const translator = new deepl.Translator(authKey);
+
+const translate = (englishText: string, target: deepl.TargetLanguageCode, options?: deepl.TranslateTextOptions) => new Promise((resolve, reject) => {
+    translator.translateText(englishText, "en", target, options)
+        .then(({ text }) => {
+            resolve({
+                english_text: englishText,
+                translated_text: text
+            });
+        })
+        .catch((err) => {
+            reject(err);
+        });
+});
 
 // async function handler2(request, response) {
 //     const { editionDate, search } = request.query

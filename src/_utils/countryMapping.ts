@@ -1,4 +1,10 @@
-const countryMapping: any = [
+export type CountryMapping = {
+    countryCode: string;
+    countryName: string;
+    continentName: string;
+}
+
+const countryMapping: CountryMapping[] = [
     { countryCode: "EG", countryName: "Egypt", continentName: "Africa" },
     { countryCode: "SA", countryName: "Saudi Arabia", continentName: "Asia" },
     { countryCode: "AE", countryName: "United Arab Emirates", continentName: "Asia" },
