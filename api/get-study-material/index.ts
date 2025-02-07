@@ -79,14 +79,14 @@ export default async function handler(request: VercelRequest, response: VercelRe
         .not('english_text', 'is', null)
         .in('english_text', texts);
 
-    const language: any = await supabase
-        .from('languages_supported')
-        .select('*')
-        .eq('country_code', countryCode.toUpperCase())
-        .eq('language_code', languageCode.toLowerCase())
-        .single();
+    // const language: any = await supabase
+    //     .from('languages_supported')
+    //     .select('*')
+    //     .eq('country_code', countryCode.toUpperCase())
+    //     .eq('language_code', languageCode.toLowerCase())
+    //     .single();
 
-    const { language_english_name: translateTo } = language.data;
+    // const { language_english_name: translateTo } = language.data;
 
     const existingSet = new Set(translatedLines.data.map((line: any) => line.english_text));
 
