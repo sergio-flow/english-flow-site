@@ -1,9 +1,9 @@
+import fetchLanguages from "@/_utils/fetchLanguages";
 import Image from "next/image";
-// import fetchLanguages from "@/_utils/fetchLanguages";
-// import Link from "next/link";
+import Link from "next/link";
 
 export default async function Home() {
-  // const { continents } = await fetchLanguages();
+  const { continents } = await fetchLanguages();
 
   return (
     <div className="w-md mx-auto py-10">
@@ -18,7 +18,7 @@ export default async function Home() {
         />
       </div>
 
-      {/* {continents.map((continent) => (
+      {continents.map((continent) => (
         <div className="py-4" key={continent.continentName}>
           <h1 className="text-white text-xl font-semibold text-center mb-2">{continent.continentName}</h1>
           <div className="grid grid-cols-2 gap-4 py-4">
@@ -40,7 +40,7 @@ export default async function Home() {
           </div>
         </div>
       )
-      )} */}
+      )}
     </div>
   );
 }
