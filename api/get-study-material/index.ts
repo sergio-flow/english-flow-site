@@ -135,6 +135,8 @@ export default async function handler(request: VercelRequest, response: VercelRe
         });
     }
 
+    console.log("Returning from OpenAI");
+
     const translations = await Promise.all(promises);
 
     const insertTranslations = translations.map((translation: any) => {
@@ -165,7 +167,9 @@ export default async function handler(request: VercelRequest, response: VercelRe
         }))
     })
 
-    await redis.set(`${languageCode}-${phraseId}`, studyMaterial);
+    await redis.set(`${languageCode}-${phraseId}`, studyMaterial, {
+        EX: 60 * 60 * 24 // 24 hours
+    });
 
     return response.status(200).json({
         studyMaterial

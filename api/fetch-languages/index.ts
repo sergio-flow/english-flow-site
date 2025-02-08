@@ -1,5 +1,6 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
 import { createClient } from "@supabase/supabase-js";
+import redisClient from 'redis';
 
 const projectID = process.env.SUPABASE_PROJECT_ID;
 const anonKey = process.env.SUPABASE_ANON_KEY;
@@ -9,6 +10,7 @@ if (!projectID || !anonKey) {
 }
 
 const supabase = createClient(`https://${projectID}.supabase.co`, anonKey);
+const redis = await redisClient.createClient({ url: process.env.REDIS_URL }).connect();
 
 type Language = {
     languageLocalName: string;
@@ -33,6 +35,17 @@ type Fetched = {
 }
 
 export default async function handler(request: VercelRequest, response: VercelResponse) {
+
+    const value = await redis.get('languages');
+
+    if (value) {
+        console.log("Returning from Redis");
+
+        return response.status(200).json({
+            ...JSON.parse(value)
+        });
+    }
+
     let supabaseQuery = await supabase
         .from('languages')
         .select('*')
@@ -79,8 +92,14 @@ export default async function handler(request: VercelRequest, response: VercelRe
         }
     }
 
-    return response.status(200).json({
+    const fetched: Fetched = {
         continents,
         languages
-    } as Fetched)
+    }
+
+    await redis.set('languages', JSON.stringify(fetched), {
+        EX: 60 * 60 * 24 // 24 hours
+    });
+
+    return response.status(200).json(fetched)
 }

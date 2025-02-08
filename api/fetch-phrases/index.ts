@@ -1,6 +1,7 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
 import { createClient } from "@supabase/supabase-js";
 import * as deepl from 'deepl-node';
+import redisClient from 'redis';
 
 const projectID = process.env.SUPABASE_PROJECT_ID;
 const anonKey = process.env.SUPABASE_ANON_KEY;
@@ -10,6 +11,7 @@ if (!projectID || !anonKey) {
 }
 
 const supabase = createClient(`https://${projectID}.supabase.co`, anonKey);
+const redis = await redisClient.createClient({ url: process.env.REDIS_URL }).connect();
 
 type QueryParams = {
     // countryCode: string;
@@ -17,10 +19,31 @@ type QueryParams = {
     gender: string;
     accent: string;
     conversation: string;
+    page?: string | number;
 }
 
 export default async function handler(request: VercelRequest, response: VercelResponse) {
-    const { languageCode, gender, accent, conversation } = request.query as QueryParams;
+    const { languageCode, gender, accent, conversation, page } = request.query as QueryParams;
+
+    const redisKeys = [
+        languageCode,
+        gender || "all",
+        accent || "all",
+        conversation || "all",
+        page || "1"
+    ]
+
+    const redisKey = redisKeys.join('-');
+
+    const value = await redis.get(redisKey);
+
+    if (value) {
+        console.log("Returning from Redis");
+
+        return response.status(200).json({
+            phrases: JSON.parse(value)
+        });
+    }
 
     let supabaseQuery = supabase
         .from('phrases')
@@ -65,15 +88,21 @@ export default async function handler(request: VercelRequest, response: VercelRe
 
     const allTranslations = [...translations, ...resolveNewTranslations]
 
+    const resolvedPhrases = (data || []).map((phrase) => {
+        const { short_description } = phrase
+        const translation = allTranslations.find(({ english_text }: any) => english_text === short_description)
+        return {
+            ...phrase,
+            short_description: translation?.translated_text || short_description
+        }
+    })
+
+    await redis.set(redisKey, JSON.stringify(resolvedPhrases), {
+        EX: 60 * 60 * 24 // 24 hours
+    })
+
     return response.status(200).json({
-        phrases: (data || []).map((phrase) => {
-            const { short_description } = phrase
-            const translation = allTranslations.find(({ english_text }: any) => english_text === short_description)
-            return {
-                ...phrase,
-                short_description: translation?.translated_text || short_description
-            }
-        })
+        phrases: resolvedPhrases
     });
 }
 

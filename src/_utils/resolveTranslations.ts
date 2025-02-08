@@ -19,8 +19,6 @@ export default async function resolveTranslations(params: Params) {
 
     const { allTexts } = await response.json();
 
-    console.log(allTexts)
-
     // const newObjToReturn: TranslationsObject = {}
 
     // for (const text of allTexts) {
