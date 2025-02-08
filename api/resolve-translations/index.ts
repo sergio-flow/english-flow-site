@@ -24,7 +24,7 @@ export default async function handler(request: VercelRequest, response: VercelRe
     const { languageCode, allTexts } = request.body as BodyParams;
 
     const objectKeys = Object.keys(allTexts);
-    const redisKey = `${languageCode}-${objectKeys.join('-')}`;
+    const redisKey = `${languageCode}-${objectKeys.join('-')}-v1`;
 
     const value = await redis.get(redisKey);
 

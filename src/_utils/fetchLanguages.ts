@@ -4,6 +4,7 @@ export type Language = {
     languageLocalName: string;
     languageCode: string;
     countryCode: string;
+    countryName: string;
 }
 
 type Country = {

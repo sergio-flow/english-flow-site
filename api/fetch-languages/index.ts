@@ -36,7 +36,9 @@ type Fetched = {
 
 export default async function handler(request: VercelRequest, response: VercelResponse) {
 
-    const value = await redis.get('languages');
+    const redisKey = 'languages-v1.1';
+
+    const value = await redis.get(redisKey);
 
     if (value) {
         console.log("Returning from Redis");
@@ -74,6 +76,7 @@ export default async function handler(request: VercelRequest, response: VercelRe
         const countryIndex = continents[continentIndex].countries.findIndex((country) => country.countryName === country_name)
 
         const languageObj = {
+            countryName: country_name,
             countryCode: country_code,
             languageLocalName: local_name,
             languageCode: code
@@ -97,7 +100,7 @@ export default async function handler(request: VercelRequest, response: VercelRe
         languages
     }
 
-    await redis.set('languages', JSON.stringify(fetched), {
+    await redis.set(redisKey, JSON.stringify(fetched), {
         EX: 60 * 60 * 24 // 24 hours
     });
 
