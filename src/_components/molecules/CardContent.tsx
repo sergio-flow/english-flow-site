@@ -15,7 +15,7 @@ export default function CardContent(params: Params) {
             </div>
 
             <div className='phrase-parts w-full'>
-                <div className="px-[4px] py-[4px] font-semibold text-md text-white">
+                <div className="px-[4px] py-[5px] font-semibold text-md text-white">
                     <span>{phrase}</span>
                 </div>
             </div>
