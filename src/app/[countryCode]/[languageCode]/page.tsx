@@ -5,7 +5,7 @@ import fetchPhrases from "@/_utils/fetchPhrases";
 import allTexts from "@/_utils/allTexts";
 import resolveTranslations from "@/_utils/resolveTranslations";
 import fetchLanguages from "@/_utils/fetchLanguages";
-import { Metadata, ResolvingMetadata } from "next";
+import { Metadata } from "next";
 
 type Props = {
   params: Promise<{ countryCode: string, languageCode: string }>

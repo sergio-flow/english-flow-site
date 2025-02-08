@@ -43,7 +43,7 @@ export default function StudyModal(params: Params) {
         }
 
         if (open && !loading && !studyMaterial) getStudyMaterial()
-    }, [open, countryCode, languageCode, phrase, loading])
+    }, [open, countryCode, languageCode, phrase, loading, studyMaterial])
 
     const handleClose = () => {
         setOpen(false)
