@@ -3,7 +3,6 @@
 import { Dialog, DialogBackdrop, DialogPanel } from '@headlessui/react'
 import fetchIpInfo from "@/_utils/fetchIpInfo"
 import { Language } from "@/_utils/fetchLanguages"
-import { redirect } from "next/navigation"
 import { useEffect, useRef, useState } from "react"
 import Link from 'next/link'
 import Image from 'next/image'
@@ -58,13 +57,7 @@ const FirstVisit = (params: Params) => {
             firstRunRef.current = false
             handleVisit()
         }
-    }, [])
-
-    const handleRedirect = () => {
-        const url = `/${language?.countryCode.toLowerCase()}/${language?.languageCode.toLowerCase()}`
-        redirect(url)
-        setOpen(false)
-    }
+    }, [params.languages])
 
     if (!open || !language) return null
 
