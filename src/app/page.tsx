@@ -2,6 +2,8 @@ import fetchLanguages from "@/_utils/fetchLanguages";
 import Image from "next/image";
 import Link from "next/link";
 
+export const revalidate = 3600 
+
 export default async function Home() {
   const { continents } = await fetchLanguages();
 

@@ -45,11 +45,17 @@ export default async function handler(request: VercelRequest, response: VercelRe
         });
     }
 
+    const pageQuery = page ? parseInt(page as string) : 1;
+    const offset = (pageQuery - 1) * 24;
+    const offsetEnd = offset + 24;
+
     let supabaseQuery = supabase
         .from('phrases')
         .select('*')
         .not('word_groups', 'is', null)
         .not('short_description', 'is', null)
+        .order('id', { ascending: false })
+        .range(offset, offsetEnd)
 
     if (gender) supabaseQuery = supabaseQuery.eq('gender', gender)
     if (accent) supabaseQuery = supabaseQuery.eq('accent', accent)

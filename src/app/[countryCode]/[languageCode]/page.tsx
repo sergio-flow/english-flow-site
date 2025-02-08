@@ -12,6 +12,8 @@ type Props = {
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>
 }
 
+export const revalidate = 3600 
+
 export async function generateMetadata(
   { params }: Props,
 ): Promise<Metadata> {
@@ -65,7 +67,7 @@ export default async function Home(data: Data) {
 
   const phrases = await fetchPhrases({ countryCode, languageCode, gender, accent, conversation });
   const { languages } = await fetchLanguages();
-  const { navbarTexts, heroTexts, filterPhrasesTexts } = await resolveTranslations({ allTexts, languageCode, countryCode });
+  const { heroTexts, filterPhrasesTexts } = await resolveTranslations({ allTexts, languageCode, countryCode });
 
   const availableLanguages = languages
     .filter(language => language.countryCode.toLowerCase() === countryCode.toLowerCase())
@@ -76,7 +78,7 @@ export default async function Home(data: Data) {
 
   return (
     <>
-      <Navbar texts={navbarTexts} />
+      <Navbar />
       <Hero
         texts={heroTexts}
         countryCode={countryCode}

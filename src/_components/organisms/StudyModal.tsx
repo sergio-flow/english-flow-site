@@ -29,6 +29,7 @@ export default function StudyModal(params: Params) {
             setLoading(true)
 
             const data = await fetch(`${apiBaseUrl}/api/get-study-material`, {
+                next: { revalidate: 3600 },
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

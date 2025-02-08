@@ -23,7 +23,7 @@ type Fetched = {
 }
 
 export default async function fetchLanguages(): Promise<Fetched> {
-    const response = await fetch(`${apiBaseUrl}/api/fetch-languages`);
+    const response = await fetch(`${apiBaseUrl}/api/fetch-languages`, { next: { revalidate: 3600 } });
 
     const { continents, languages } = await response.json();
 
