@@ -12,13 +12,13 @@ if (!projectID || !anonKey) {
 const supabase = createClient(`https://${projectID}.supabase.co`, anonKey);
 
 type BodyParams = {
-    countryCode: string;
+    // countryCode: string;
     languageCode: deepl.TargetLanguageCode;
     allTexts: any;
 }
 
 export default async function handler(request: VercelRequest, response: VercelResponse) {
-    const { countryCode, languageCode, allTexts } = request.body as BodyParams;
+    const { languageCode, allTexts } = request.body as BodyParams;
 
     let allTextValues: string[] = [];
     for (const key in allTexts) {
@@ -30,7 +30,7 @@ export default async function handler(request: VercelRequest, response: VercelRe
     const translatedLines: any = await supabase
         .from('translated_lines')
         .select('*')
-        .eq('target_country_code', countryCode.toUpperCase())
+        // .eq('target_country_code', countryCode.toUpperCase())
         .eq('target_language_code', languageCode.toLowerCase())
         .in('english_text', allTextValues);
 
@@ -44,7 +44,7 @@ export default async function handler(request: VercelRequest, response: VercelRe
 
         const newTranslations = translations.map((translation: any) => {
             return {
-                target_country_code: countryCode.toUpperCase(),
+                // target_country_code: countryCode.toUpperCase(),
                 target_language_code: languageCode.toLowerCase(),
                 translated_text: translation.translated_text,
                 english_text: translation.english_text
@@ -81,6 +81,7 @@ const authKey = <string>process.env.DEEPL_API_KEY;
 const translator = new deepl.Translator(authKey);
 
 const translate = (englishText: string, target: deepl.TargetLanguageCode, options?: deepl.TranslateTextOptions) => new Promise((resolve, reject) => {
+    console.log('Translating:', englishText);
     translator.translateText(englishText, "en", target, options)
         .then(({ text }) => {
             resolve({

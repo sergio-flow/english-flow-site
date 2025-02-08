@@ -5,6 +5,33 @@ import fetchPhrases from "@/_utils/fetchPhrases";
 import allTexts from "@/_utils/allTexts";
 import resolveTranslations from "@/_utils/resolveTranslations";
 import fetchLanguages from "@/_utils/fetchLanguages";
+import { Metadata, ResolvingMetadata } from "next";
+
+type Props = {
+  params: Promise<{ countryCode: string, languageCode: string }>
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>
+}
+
+export async function generateMetadata(
+  { params }: Props,
+): Promise<Metadata> {
+  const { countryCode, languageCode } = await params;
+
+  let title = allTexts.heroTexts.title;
+  let description = [allTexts.heroTexts.description1, allTexts.heroTexts.description2].join(" ")
+
+  if (countryCode && languageCode) {
+    const resolved = await resolveTranslations({ allTexts, languageCode, countryCode });
+
+    title = resolved.heroTexts.title;
+    description = [resolved.heroTexts.description1, resolved.heroTexts.description2].join(" ");
+  }
+
+  return {
+    title: `${title} | English Flow`,
+    description
+  }
+}
 
 type Data = {
   params: Promise<{

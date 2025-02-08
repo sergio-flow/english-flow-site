@@ -1,6 +1,10 @@
 import OpenAI from "openai";
 import * as deepl from 'deepl-node';
+import redisClient from 'redis';
 import type { VercelRequest, VercelResponse } from '@vercel/node';
+
+const redis = await redisClient.createClient({ url: process.env.REDIS_URL }).connect();
+
 import { createClient } from "@supabase/supabase-js";
 
 const projectID = process.env.SUPABASE_PROJECT_ID;
@@ -16,7 +20,7 @@ type Variables = {
     phraseId: string | number;
     phraseText: string;
     wordGroups: string[];
-    countryCode: string;
+    // countryCode: string;
     languageCode: string;
 }
 
@@ -37,14 +41,23 @@ const translate = (englishText: string, target: deepl.TargetLanguageCode, option
 });
 
 export default async function handler(request: VercelRequest, response: VercelResponse) {
-    const { phraseId, countryCode, languageCode } = request.body as Variables;
+    const { phraseId, languageCode } = request.body as Variables;
 
     if (
         !phraseId ||
-        !countryCode ||
         !languageCode
     ) {
         throw new Error('Missing required parameters');
+    }
+
+    const value = await redis.get(`${languageCode}-${phraseId}`);
+
+    if (value) {
+        console.log("Returning from Redis");
+
+        return response.status(200).json({
+            studyMaterial: value
+        });
     }
 
     let markdown = null
@@ -73,7 +86,7 @@ export default async function handler(request: VercelRequest, response: VercelRe
     const translatedLines: any = await supabase
         .from('translated_lines')
         .select('*')
-        .eq('target_country_code', countryCode.toUpperCase())
+        // .eq('target_country_code', countryCode.toUpperCase())
         .eq('target_language_code', languageCode.toLowerCase())
         .not('translated_text', 'is', null)
         .not('english_text', 'is', null)
@@ -126,7 +139,7 @@ export default async function handler(request: VercelRequest, response: VercelRe
 
     const insertTranslations = translations.map((translation: any) => {
         return {
-            target_country_code: countryCode.toUpperCase(),
+            // target_country_code: countryCode.toUpperCase(),
             target_language_code: languageCode.toLowerCase(),
             english_text: translation.english_text,
             translated_text: translation.translated_text
@@ -143,17 +156,19 @@ export default async function handler(request: VercelRequest, response: VercelRe
         ...insertedTranslations || [],
     ];
 
-    console.log("Returning from OpenAI");
+    const studyMaterial = generateMarkdown({
+        phraseText,
+        wordGroups,
+        translations: combinedTranslations.map((line: any) => ({
+            englishText: line.english_text,
+            translatedText: line.translated_text
+        }))
+    })
+
+    await redis.set(`${languageCode}-${phraseId}`, studyMaterial);
 
     return response.status(200).json({
-        studyMaterial: generateMarkdown({
-            phraseText,
-            wordGroups,
-            translations: combinedTranslations.map((line: any) => ({
-                englishText: line.english_text,
-                translatedText: line.translated_text
-            }))
-        })
+        studyMaterial
     });
 }
 

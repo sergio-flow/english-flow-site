@@ -12,7 +12,7 @@ if (!projectID || !anonKey) {
 const supabase = createClient(`https://${projectID}.supabase.co`, anonKey);
 
 type QueryParams = {
-    countryCode: string;
+    // countryCode: string;
     languageCode: deepl.TargetLanguageCode;
     gender: string;
     accent: string;
@@ -20,7 +20,7 @@ type QueryParams = {
 }
 
 export default async function handler(request: VercelRequest, response: VercelResponse) {
-    const { countryCode, languageCode, gender, accent, conversation } = request.query as QueryParams;
+    const { languageCode, gender, accent, conversation } = request.query as QueryParams;
 
     let supabaseQuery = supabase
         .from('phrases')
@@ -40,7 +40,7 @@ export default async function handler(request: VercelRequest, response: VercelRe
     const { data: translations, error: translationError }: any = await supabase
         .from('translated_lines')
         .select('english_text,translated_text')
-        .eq('target_country_code', countryCode.toUpperCase())
+        // .eq('target_country_code', countryCode.toUpperCase())
         .eq('target_language_code', languageCode.toLowerCase())
         .in('english_text', shortDescriptions)
 
@@ -53,7 +53,7 @@ export default async function handler(request: VercelRequest, response: VercelRe
 
         const newTranslations = resolveNewTranslations.map((translation: any) => {
             return {
-                target_country_code: countryCode.toUpperCase(),
+                // target_country_code: countryCode.toUpperCase(),
                 target_language_code: languageCode.toLowerCase(),
                 translated_text: translation.translated_text,
                 english_text: translation.english_text
@@ -81,6 +81,7 @@ const authKey = <string>process.env.DEEPL_API_KEY;
 const translator = new deepl.Translator(authKey);
 
 const translate = (englishText: string, target: deepl.TargetLanguageCode, options?: deepl.TranslateTextOptions) => new Promise((resolve, reject) => {
+    console.log('Translating:', englishText)
     translator.translateText(englishText, "en", target, options)
         .then(({ text }) => {
             resolve({
