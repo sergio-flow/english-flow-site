@@ -37,6 +37,10 @@ export default function CardHeader(params: Params) {
                     {accent === 'british' && (
                         <><i className={`em em-gb`} /> <span>{texts.british}</span></>
                     )}
+
+                    {accent === 'australian' && (
+                        <><i className={`em em-flag-au`} /> <span>{texts.australian}</span></>
+                    )}
                 </div>
             </div>
 
