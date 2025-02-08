@@ -23,12 +23,12 @@ export default function Navbar(params: Params) {
                     <div className="text-sm w-[80px] md:w-auto uppercase font-bold text-white">English Flow</div>
                 </Link>
 
-                <div className="flex items-center border-l border-white/10 pl-4">
+                {/* <div className="flex items-center border-l border-white/10 pl-4">
                     <Link href="/articles" className="text-xs font-semibold uppercase py-2 px-4 rounded-lg text-white bg-white/10 mx-1">{texts.phrases}</Link>
                     <Link href="/articles" className="text-xs font-semibold uppercase text-white/60 py-2 px-4 rounded-lg hover:text-white hover:bg-white/10 mx-1">{texts.articles}</Link>
                     <Link href="/articles" className="text-xs font-semibold uppercase text-white/60 py-2 px-4 rounded-lg hover:text-white hover:bg-white/10 mx-1">{texts.aboutUs}</Link>
-                    {/* <Link href="/blog" className="text-sm font-semibold uppercase text-white py-2 px-4 rounded-lg hover:bg-white/10">Blog</Link> */}
-                </div>
+                    <Link href="/blog" className="text-sm font-semibold uppercase text-white py-2 px-4 rounded-lg hover:bg-white/10">Blog</Link>
+                </div> */}
             </div>
         </div>
     )
