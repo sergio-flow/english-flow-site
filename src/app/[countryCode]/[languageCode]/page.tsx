@@ -28,10 +28,10 @@ export async function generateMetadata(
   }
 
   return {
-    title: `${title} | English Flow`,
+    title,
     description,
     openGraph: {
-      title: `${title} | English Flow`,
+      title,
       description,
       type: 'website',
       locale: languageCode,
