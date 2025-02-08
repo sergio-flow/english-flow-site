@@ -29,7 +29,23 @@ export async function generateMetadata(
 
   return {
     title: `${title} | English Flow`,
-    description
+    description,
+    openGraph: {
+      title: `${title} | English Flow`,
+      description,
+      type: 'website',
+      locale: languageCode,
+      siteName: 'English Flow',
+      url: `https://www.englishflow.ai/${countryCode}/${languageCode}`,
+      images: [
+        {
+          url: 'https://www.englishflow.ai/cover.jpg',
+          width: 795,
+          height: 300,
+          alt: 'English Flow',
+        },
+      ],
+    },
   }
 }
 
