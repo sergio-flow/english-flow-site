@@ -21,7 +21,6 @@
     "rc-slider": "^11.1.8",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
-    "react-drag-drop-files": "^2.4.0",
     "react-dropzone": "^14.3.5",
     "react-hot-toast": "^2.5.1",
     "react-markdown": "^9.0.3",

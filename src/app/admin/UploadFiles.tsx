@@ -6,7 +6,8 @@ import { useDropzone } from 'react-dropzone'
 import { useCallback } from "react";
 
 export default function UploadFiles() {
-    const onDrop = useCallback((acceptedFiles: any) => {
+    
+    const onDrop = useCallback((acceptedFiles: File[]) => {
         const formData = new FormData();
 
         for (let i = 0; i < acceptedFiles.length; i++) {
@@ -50,27 +51,13 @@ export default function UploadFiles() {
                 {
                     isDragActive ?
                         <p className="text-sm text-white">Drag and drop your files here.</p> :
-                        <p className="text-sm text-white text-center">Drag 'n' drop some files here,<br />or click to select files</p>
+                        <p className="text-sm text-white text-center">Drag &apos;n&apos; drop some files here,<br />or click to select files</p>
                 }
             </div>
-
-            {/* <FileUploader
-                multiple={true}
-                handleChange={handleChange}
-                name="file"
-                types={["MP3"]}
-            >
-                <div className="flex flex-col items-center justify-center h-[300px] border-2 border-dashed border-gray-400 rounded-lg">
-                    <div className="text-lg text-white">Drag and drop your files here</div>
-                    <div className="text-sm text-gray-400">or</div>
-                    <div className="text-sm text-gray-400">Click to browse</div>
-                </div>
-            </FileUploader> */}
 
             <Toaster
                 toastOptions={{
                     style: {
-                        fontFamily: 'Noto Sans',
                         fontWeight: 500,
                         fontSize: '14px',
                     }

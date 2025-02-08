@@ -30,7 +30,7 @@ export default async function handler(request: VercelRequest, response: VercelRe
         gender || "all",
         accent || "all",
         conversation || "all",
-        page || "1"
+        page || "2"
     ]
 
     const redisKey = redisKeys.join('-');
