@@ -1,11 +1,12 @@
+import FirstVisit from "@/_components/molecules/FirstVisit";
 import fetchLanguages from "@/_utils/fetchLanguages";
 import Image from "next/image";
 import Link from "next/link";
 
-export const revalidate = 3600 
+export const revalidate = 3600
 
 export default async function Home() {
-  const { continents } = await fetchLanguages();
+  const { continents, languages } = await fetchLanguages();
 
   return (
     <div className="w-md mx-auto py-10">
@@ -43,6 +44,8 @@ export default async function Home() {
         </div>
       )
       )}
+
+      <FirstVisit languages={languages} />
     </div>
   );
 }

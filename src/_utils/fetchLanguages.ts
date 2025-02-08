@@ -1,6 +1,6 @@
 import { apiBaseUrl } from "@/_constants/environment";
 
-type Language = {
+export type Language = {
     languageLocalName: string;
     languageCode: string;
     countryCode: string;
