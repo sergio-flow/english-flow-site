@@ -1,12 +1,12 @@
 import Image from "next/image";
 import Link from "next/link";
 
-type Params = {
-    texts: { [key: string]: string }
-}
+// type Params = {
+//     texts: { [key: string]: string }
+// }
 
-export default function Navbar(params: Params) {
-    const { texts } = params
+export default function Navbar() {
+    // const { texts } = params
 
     return (
         <div className=" mb-10 border-b border-white/10">
