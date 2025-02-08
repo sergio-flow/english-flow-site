@@ -1,9 +1,33 @@
 import FirstVisit from "@/_components/molecules/FirstVisit";
 import fetchLanguages from "@/_utils/fetchLanguages";
+import { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 
 export const revalidate = 3600
+
+export async function generateMetadata(): Promise<Metadata> {
+  return {
+    title: "English Flow",
+    description: "Understand English by studying phrases individually.",
+    openGraph: {
+      title: "English Flow",
+      description: "Understand English by studying phrases individually.",
+      type: 'website',
+      locale: "en",
+      siteName: 'English Flow',
+      url: `https://www.englishflow.ai`,
+      images: [
+        {
+          url: 'https://www.englishflow.ai/cover.jpg',
+          width: 795,
+          height: 300,
+          alt: 'English Flow',
+        },
+      ],
+    },
+  }
+}
 
 export default async function Home() {
   const { continents, languages } = await fetchLanguages();
