@@ -168,7 +168,7 @@ export default async function handler(request: VercelRequest, response: VercelRe
     })
 
     await redis.set(`${languageCode}-${phraseId}`, studyMaterial, {
-        EX: 60 * 60 * 24 // 24 hours
+        EX: 60 * 60 * 0.5 // 24 hours
     });
 
     return response.status(200).json({

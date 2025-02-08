@@ -24,7 +24,7 @@ export default async function handler(request: VercelRequest, response: VercelRe
     const { languageCode, allTexts } = request.body as BodyParams;
 
     const objectKeys = Object.keys(allTexts);
-    const redisKey = `${languageCode}-${objectKeys.join('-')}-v1`;
+    const redisKey = `${languageCode}-${objectKeys.join('-')}-v2`;
 
     const value = await redis.get(redisKey);
 
@@ -91,7 +91,7 @@ export default async function handler(request: VercelRequest, response: VercelRe
     }
 
     await redis.set(redisKey, JSON.stringify(newTexts), {
-        EX: 60 * 60 * 24 // 24 hours
+        EX: 60 * 60 * 0.5 // 24 hours
     });
 
     return response.status(200).json({ allTexts: newTexts });

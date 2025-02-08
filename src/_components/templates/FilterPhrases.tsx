@@ -53,6 +53,7 @@ export const texts = {
     accent: "Accent",
     american: "American accent",
     british: "British accent",
+    australian: "Australian accent",
     conversation: "Conversation",
     start: "Start a conversation",
     maintain: "Maintain a conversation",
@@ -85,6 +86,7 @@ const filters = (texts: { [key: string]: string }) => ([
         options: [
             { value: 'american', label: texts.american, emoji: "em-us" },
             { value: 'british', label: texts.british, emoji: "em-gb" },
+            { value: 'australian', label: texts.australian, emoji: "em-flag-au" },
         ]
     },
     {

@@ -10,7 +10,7 @@ type Params = {
 
 export default async function resolveTranslations(params: Params) {
     const response = await fetch(`${apiBaseUrl}/api/resolve-translations`, {
-        next: { revalidate: 3600 },
+        next: { revalidate: 3600 * 0.5 },
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
