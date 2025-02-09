@@ -37,119 +37,68 @@ type Fetched = {
 
 type QueryParams = {
     languageCode: deepl.TargetLanguageCode;
-    slug?: string;
 }
 
 export default async function handler(request: VercelRequest, response: VercelResponse) {
-    const { languageCode, slug } = request.query as QueryParams;
+    const { languageCode } = request.query as QueryParams;
 
     if (!languageCode) {
         return response.status(400).json({ error: 'Missing language code' });
     }
 
-    if (!slug) {
-        return response.status(400).json({ error: 'Missing slug' });
-    }
+    // const redisKey = `all-speak-like-x-${languageCode}-1`;
 
-    const redisKey = `speak-like-x-${languageCode}-${slug}-1`;
+    // const value = await redis.get(redisKey);
 
-    const value = await redis.get(redisKey);
+    // if (value) {
+    //     console.log("Returning from Redis");
 
-    if (value) {
-        console.log("Returning from Redis");
-
-        return response.status(200).json(JSON.parse(value));
-    } else {
-        console.log("Not returning from Redis");
-    }
+    //     return response.status(200).json(JSON.parse(value));
+    // } else {
+    //     console.log("Not returning from Redis");
+    // }
 
     let supabaseQuery = supabase
         .from('speak_like_x')
         .select('*')
-
-    if (slug) {
-        supabaseQuery = supabaseQuery.eq('slug', slug)
-    }
-
     const { data, error } = await supabaseQuery;
 
     if (!data) {
         return response.status(404).json({ error: 'Not found' });
     }
 
-    const { image, title, tags_json, content_json } = data[0];
+    const slugs = data.map((d: any) => d.slug)
 
-    const translation = await supabase.from('speak_like_translations')
+    const translations: any = await supabase.from('speak_like_translations')
         .select('*')
-        .eq('slug', slug)
+        .in('slug', slugs)
         .eq('language_code', languageCode)
 
-    if (translation.data && translation.data[0] && translation.data[0].content_json) {
-        const returnObj = {
-            image,
-            title: translation.data[0].title,
-            tagsJson: translation.data[0].tags_json,
-            contentJson: translation.data[0].content_json
+    const arrayToReturn = []
+
+    for (const d of translations.data) {
+        const { title, slug, tags_json, content_json } = d;
+
+        const obj = data.find((d: any) => d.slug === slug);
+
+        if (obj) {
+            const newObj = {
+                image: obj.image,
+                slug: obj.slug,
+                title: title,
+                tagsJson: tags_json,
+                contentJson: content_json
+            }
+
+            arrayToReturn.push(newObj)
         }
-
-        await redis.set(redisKey, JSON.stringify(returnObj), {
-            EX: 60 * 60 * 0.5 // 24 hours
-        });
-
-        return response.status(200).json(returnObj)
     }
 
-    const whatTo = whatToTranslate(content_json)
+    // await redis.set(redisKey, JSON.stringify(newObj), {
+    //     EX: 60 * 60 * 0.5 // 24 hours
+    // });
 
-    const translatePromises = whatTo.map((object: TranslateObject) => translate(object, languageCode));
-
-    translatePromises.push(translate({
-        text: title,
-        mainKey: 'title',
-        mainType: 'title'
-    }, languageCode))
-
-    for (const tag of tags_json) {
-        translatePromises.push(translate({
-            text: tag.text,
-            mainKey: 'tag',
-            originalText: tag.text
-        }, languageCode))
-    }
-
-    const translations = await Promise.all(translatePromises);
-
-    const filledIn = fillInTranslations(content_json, translations)
-
-    const newTags = tags_json.map((tag: any) => {
-        return {
-            ...tag,
-            text: (translations.find((t: any) => t.mainKey === 'tag' && tag.text === t.originalText) as TranslateObject).text
-        }
-    })
-
-    const newObj = {
-        title: (translations.find((t: any) => t.mainKey === 'title') as TranslateObject).text,
-        slug,
-        language_code: languageCode,
-        content_json: filledIn,
-        tags_json: newTags
-    }
-
-    await supabase.from('speak_like_translations').insert(newObj)
-
-    const returnObj = {
-        image: image,
-        title: newObj.title,
-        tagsJson: newObj.tags_json,
-        contentJson: filledIn
-    }
-
-    await redis.set(redisKey, JSON.stringify(newObj), {
-        EX: 60 * 60 * 0.5 // 24 hours
-    });
-
-    return response.status(200).json(returnObj)
+    return response.status(200).json(arrayToReturn)
 }
 
 const authKey = <string>process.env.DEEPL_API_KEY;

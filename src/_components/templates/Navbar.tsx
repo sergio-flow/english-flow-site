@@ -8,10 +8,12 @@ import Link from "next/link";
 type Params = {
     countryCode: string;
     languageCode: string;
+    page: string;
+    texts: { [key: string]: string };
 }
 
 export default function Navbar(params: Params) {
-    const { countryCode, languageCode } = params;
+    const { countryCode, languageCode, page, texts } = params;
 
     const baseUrl = `/${countryCode.toLowerCase()}/${languageCode.toLowerCase()}`
 
@@ -31,8 +33,8 @@ export default function Navbar(params: Params) {
                 </Link>
 
                 <div className="flex items-center border-l border-white/10 pl-4">
-                    <Link href={baseUrl} className="text-xs font-semibold uppercase py-2 px-4 rounded-lg text-white bg-white/10 mx-1">{texts.phrases}</Link>
-                    {/* <Link href={`${baseUrl}/speak-like-x`} className="text-xs font-semibold uppercase text-white/60 py-2 px-4 rounded-lg hover:text-white hover:bg-white/10 mx-1">{texts.speakLike}</Link> */}
+                    <Link href={baseUrl} className={`text-xs font-semibold uppercase py-2 px-4 rounded-lg text-white ${page === 'all-phrases' ? "bg-white/10" : "hover:text-white hover:bg-white/10"} mx-1`}>{texts.phrases}</Link>
+                    <Link href={`${baseUrl}/speak-like-x`} className={`text-xs font-semibold uppercase py-2 px-4 rounded-lg text-white ${page === 'speak-like-x' ? "bg-white/10" : "hover:text-white hover:bg-white/10"} mx-1`}>{texts.speakLike}</Link>
                     {/* <Link href="/articles" className="text-xs font-semibold uppercase text-white/60 py-2 px-4 rounded-lg hover:text-white hover:bg-white/10 mx-1">{texts.aboutUs}</Link>
                     <Link href="/blog" className="text-sm font-semibold uppercase text-white py-2 px-4 rounded-lg hover:bg-white/10">Blog</Link> */}
                 </div>

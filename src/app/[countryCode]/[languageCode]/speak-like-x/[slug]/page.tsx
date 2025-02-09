@@ -3,7 +3,7 @@ import resolveTranslations from "@/_utils/resolveTranslations";
 import fetchSpeakLikeX from "@/_utils/fetchSpeakLikeX";
 import SpeakLikeArticle from "@/_components/templates/SpeakLikeArticle";
 import fetchPhrases from "@/_utils/fetchPhrases";
-import { texts as phraseTexts } from "@/_components/templates/FilterPhrases";
+import allTexts from "@/_utils/allTexts";
 
 // type Props = {
 //   params: Promise<{ countryCode: string, languageCode: string }>
@@ -71,22 +71,20 @@ export default async function Home(data: Data) {
 
   const phrases = await fetchPhrases({ countryCode, languageCode, phraseIds });
 
-  const allTexts = {
-    filterPhrasesTexts: phraseTexts
-  }
+  const { navbarTexts, filterPhrasesTexts } = await resolveTranslations({ allTexts, languageCode, countryCode });
 
-  const { filterPhrasesTexts } = await resolveTranslations({ allTexts, languageCode, countryCode });
-
-  // const { heroTexts, filterPhrasesTexts } = await resolveTranslations({ allTexts, languageCode, countryCode });
 
   return (
     <>
       <Navbar
+        texts={navbarTexts}
+        page="speak-like-x"
         countryCode={countryCode}
         languageCode={languageCode}
       />
 
       <SpeakLikeArticle
+        countryCode={countryCode}
         languageCode={languageCode}
         article={Array.isArray(article) ? article[0] : article}
         phrases={phrases}

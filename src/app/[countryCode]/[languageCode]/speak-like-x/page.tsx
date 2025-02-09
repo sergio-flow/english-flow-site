@@ -2,7 +2,8 @@ import Navbar from "@/_components/templates/Navbar";
 import allTexts from "@/_utils/allTexts";
 import resolveTranslations from "@/_utils/resolveTranslations";
 import { Metadata } from "next";
-import fetchSpeakLikeX from "@/_utils/fetchSpeakLikeX";
+import fetchAllSpeakLike from "@/_utils/fetchAllSpeakLike";
+import SpeakLikeArticles from "@/_components/templates/SpeakLikeArticles";
 
 type Props = {
   params: Promise<{ countryCode: string, languageCode: string }>
@@ -58,18 +59,25 @@ type Data = {
 export default async function Home(data: Data) {
   const { countryCode, languageCode } = await data.params;
 
-  const articles = await fetchSpeakLikeX({ languageCode });
+  const articles = await fetchAllSpeakLike({ languageCode });
 
-  console.log(articles)
-  // const { heroTexts, filterPhrasesTexts } = await resolveTranslations({ allTexts, languageCode, countryCode });
+  const { navbarTexts } = await resolveTranslations({ allTexts, languageCode, countryCode });
 
   return (
     <>
       <Navbar
+        texts={navbarTexts}
+        page="speak-like-x"
         countryCode={countryCode}
         languageCode={languageCode}
       />
 
+      <SpeakLikeArticles
+        title={navbarTexts.speakLike}
+        countryCode={countryCode}
+        languageCode={languageCode}
+        articles={articles}
+      />
     </>
   );
 }

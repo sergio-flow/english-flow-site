@@ -67,7 +67,7 @@ export default async function Home(data: Data) {
 
   const phrases = await fetchPhrases({ countryCode, languageCode, gender, accent, conversation });
   const { languages } = await fetchLanguages();
-  const { heroTexts, filterPhrasesTexts } = await resolveTranslations({ allTexts, languageCode, countryCode });
+  const { navbarTexts, heroTexts, filterPhrasesTexts } = await resolveTranslations({ allTexts, languageCode, countryCode });
 
   const availableLanguages = languages
     .filter(language => language.countryCode.toLowerCase() === countryCode.toLowerCase())
@@ -79,6 +79,8 @@ export default async function Home(data: Data) {
   return (
     <>
       <Navbar
+        texts={navbarTexts}
+        page="all-phrases"
         countryCode={countryCode}
         languageCode={languageCode}
       />

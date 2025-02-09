@@ -2,6 +2,8 @@ import TypePhrase from "@/_types/TypePhrase";
 import imageUrl from "@/_utils/imageUrl";
 import Image from "next/image";
 import Phrase from "../organisms/Phrase";
+import { ArrowLongLeftIcon } from "@heroicons/react/20/solid";
+import Link from "next/link";
 
 type Article = {
     title: string;
@@ -15,6 +17,7 @@ type Article = {
 }
 
 type Params = {
+    countryCode: string;
     languageCode: string;
     article: Article;
     phrases: TypePhrase[];
@@ -24,8 +27,14 @@ type Params = {
 export default function SpeakLikeArticle(params: Params) {
     const { title, image, contentJson, tagsJson } = params.article
 
+    const baseUrl = `/${params.countryCode}/${params.languageCode}/speak-like-x`
+
     return (
-        <div className="container mx-auto max-w-3xl py-4 px-4 pb-20">
+        <div className="container mx-auto max-w-3xl py-4 px-4 pb-20 relative">
+            <Link href={baseUrl} className="flex items-center gap-2 absolute left-[-150px]">
+                <ArrowLongLeftIcon className="text-white w-10 h-10" />
+            </Link>
+
             <Image
                 src={imageUrl(image)}
                 alt={""}
