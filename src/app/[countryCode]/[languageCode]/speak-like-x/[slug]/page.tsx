@@ -65,6 +65,8 @@ export default async function Home(data: Data) {
     slug
   });
 
+  console.log(article)
+
   const phraseIds = (Array.isArray(article) ? article[0].contentJson : article.contentJson)
     .map((content) => content.showPhrase)
     .filter((val) => typeof val === "string" || typeof val === "number");

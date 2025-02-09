@@ -51,7 +51,7 @@ export default async function handler(request: VercelRequest, response: VercelRe
         return response.status(400).json({ error: 'Missing slug' });
     }
 
-    const redisKey = `speak-like-x-${languageCode}-${slug}-1`;
+    const redisKey = `speak-like-x-${languageCode}-${slug}-2`;
 
     const value = await redis.get(redisKey);
 
@@ -145,7 +145,7 @@ export default async function handler(request: VercelRequest, response: VercelRe
         contentJson: filledIn
     }
 
-    await redis.set(redisKey, JSON.stringify(newObj), {
+    await redis.set(redisKey, JSON.stringify(returnObj), {
         EX: 60 * 60 * 0.5 // 24 hours
     });
 
