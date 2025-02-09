@@ -66,8 +66,8 @@ export default async function Home(data: Data) {
   });
 
   const phraseIds = (Array.isArray(article) ? article[0].contentJson : article.contentJson)
-    .map((content) => typeof content.showPhrase === 'string' ? parseInt(content.showPhrase) : NaN)
-    .filter(Boolean)
+    .map((content) => content.showPhrase)
+    .filter((phraseId) => typeof phraseId === "string" || typeof phraseId === "number");
 
   const phrases = await fetchPhrases({ countryCode, languageCode, phraseIds });
 

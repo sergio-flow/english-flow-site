@@ -109,7 +109,7 @@ export default async function handler(request: VercelRequest, response: VercelRe
         translatePromises.push(translate({
             text: tag.text,
             mainKey: 'tag',
-            mainType: 'tag'
+            originalText: tag.text
         }, languageCode))
     }
 
@@ -120,7 +120,7 @@ export default async function handler(request: VercelRequest, response: VercelRe
     const newTags = tags_json.map((tag: any) => {
         return {
             ...tag,
-            text: (translations.find((t: any) => t.mainKey === 'tag' && tag.text === t.text) as TranslateObject).text
+            text: (translations.find((t: any) => t.mainKey === 'tag' && tag.text === t.originalText) as TranslateObject).text
         }
     })
 
@@ -155,8 +155,9 @@ type TranslateObject = {
     text: string;
     mainKey: string;
     subKey?: string;
-    mainType: string;
+    mainType?: string;
     context?: string;
+    originalText?: string;
 }
 
 const translate = (object: TranslateObject, target: deepl.TargetLanguageCode) => new Promise((resolve, reject) => {

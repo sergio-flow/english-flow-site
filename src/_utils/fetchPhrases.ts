@@ -6,7 +6,7 @@ type Params = {
     gender?: string;
     accent?: string;
     conversation?: string;
-    phraseIds?: number[];
+    phraseIds?: (string | number)[];
 }
 
 export default async function fetchPhrases(params: Params) {
