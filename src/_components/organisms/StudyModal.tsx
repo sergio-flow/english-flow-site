@@ -8,7 +8,7 @@ import { useEffect, useState } from 'react';
 import Markdown from 'react-markdown'
 
 type Params = {
-    countryCode: string;
+    // countryCode: string;
     languageCode: string;
     phrase: TypePhrase;
     open: boolean;
@@ -16,7 +16,7 @@ type Params = {
 }
 
 export default function StudyModal(params: Params) {
-    const { countryCode, languageCode, phrase, open, setOpen } = params
+    const { languageCode, phrase, open, setOpen } = params
 
     const [loading, setLoading] = useState(false)
     const [studyMaterial, setStudyMaterial] = useState<string | null>(null)
@@ -34,7 +34,7 @@ export default function StudyModal(params: Params) {
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ countryCode, languageCode, phraseId: phrase.id }),
+                body: JSON.stringify({ languageCode, phraseId: phrase.id }),
             });
 
             const { studyMaterial } = await data.json();
@@ -44,7 +44,7 @@ export default function StudyModal(params: Params) {
         }
 
         if (open && !loading && !studyMaterial) getStudyMaterial()
-    }, [open, countryCode, languageCode, phrase, loading, studyMaterial])
+    }, [open, languageCode, phrase, loading, studyMaterial])
 
     const handleClose = () => {
         setOpen(false)

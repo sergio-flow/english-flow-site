@@ -20,17 +20,19 @@ type QueryParams = {
     accent: string;
     conversation: string;
     page?: string | number;
+    phraseIds?: [string | number];
 }
 
 export default async function handler(request: VercelRequest, response: VercelResponse) {
-    const { languageCode, gender, accent, conversation, page } = request.query as QueryParams;
+    const { languageCode, gender, accent, conversation, page, phraseIds } = request.query as QueryParams;
 
     const redisKeys = [
         languageCode,
         gender || "all",
         accent || "all",
         conversation || "all",
-        page || "3"
+        page || "3",
+        phraseIds ? phraseIds.join('-') : "all"
     ]
 
     const redisKey = redisKeys.join('-');
@@ -60,6 +62,7 @@ export default async function handler(request: VercelRequest, response: VercelRe
     if (gender) supabaseQuery = supabaseQuery.eq('gender', gender)
     if (accent) supabaseQuery = supabaseQuery.eq('accent', accent)
     if (conversation) supabaseQuery = supabaseQuery.eq('conversation', conversation)
+    if (phraseIds) supabaseQuery = supabaseQuery.in('id', phraseIds)
 
     const { data, error } = await supabaseQuery;
 

@@ -7,7 +7,7 @@ import StudyModal from "../organisms/StudyModal";
 import TypePhrase from "@/_types/TypePhrase";
 
 type Params = {
-    countryCode: string;
+    // countryCode: string;
     languageCode: string;
     phrase: TypePhrase;
     texts: {
@@ -18,7 +18,7 @@ type Params = {
 export default function CardFooter(params: Params) {
     const [showStudyModal, setShowStudyModal] = useState(false)
 
-    const { countryCode, languageCode, phrase, texts } = params
+    const { languageCode, phrase, texts } = params
 
     const { isRecording, startRecording, stopRecording, audioBlob } = useAudioRecorder();
 
@@ -81,7 +81,7 @@ export default function CardFooter(params: Params) {
             </div>
 
             <StudyModal
-                countryCode={countryCode}
+                // countryCode={countryCode}
                 languageCode={languageCode}
                 phrase={phrase}
                 open={showStudyModal}

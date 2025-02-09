@@ -58,7 +58,7 @@ type Data = {
 export default async function Home(data: Data) {
   const { countryCode, languageCode } = await data.params;
 
-  const articles = await fetchSpeakLikeX();
+  const articles = await fetchSpeakLikeX({ languageCode });
 
   console.log(articles)
   // const { heroTexts, filterPhrasesTexts } = await resolveTranslations({ allTexts, languageCode, countryCode });

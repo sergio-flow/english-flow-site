@@ -32,7 +32,7 @@ export default function Navbar(params: Params) {
 
                 <div className="flex items-center border-l border-white/10 pl-4">
                     <Link href={baseUrl} className="text-xs font-semibold uppercase py-2 px-4 rounded-lg text-white bg-white/10 mx-1">{texts.phrases}</Link>
-                    <Link href={`${baseUrl}/speak-like-x`} className="text-xs font-semibold uppercase text-white/60 py-2 px-4 rounded-lg hover:text-white hover:bg-white/10 mx-1">{texts.speakLike}</Link>
+                    {/* <Link href={`${baseUrl}/speak-like-x`} className="text-xs font-semibold uppercase text-white/60 py-2 px-4 rounded-lg hover:text-white hover:bg-white/10 mx-1">{texts.speakLike}</Link> */}
                     {/* <Link href="/articles" className="text-xs font-semibold uppercase text-white/60 py-2 px-4 rounded-lg hover:text-white hover:bg-white/10 mx-1">{texts.aboutUs}</Link>
                     <Link href="/blog" className="text-sm font-semibold uppercase text-white py-2 px-4 rounded-lg hover:bg-white/10">Blog</Link> */}
                 </div>
@@ -44,7 +44,7 @@ export default function Navbar(params: Params) {
 export const texts = {
     name: 'English Flow',
     phrases: 'All Phrases',
-    speakLike: 'Speak Like X',
+    speakLike: 'Speak Like «X»',
     articles: 'Articles',
     aboutUs: 'About us',
 }

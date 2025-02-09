@@ -3,13 +3,26 @@ import { apiBaseUrl } from "@/_constants/environment";
 type Article = {
     image: string;
     title: string;
-    content: string;
+    tagsJson: { emoji: string, text: string }[];
+    contentJson: [
+        {
+            [key: string]: string | { text: string }[];
+        }
+    ]
 }
 
-export default async function fetchSpeakLikeX(): Promise<Article[]> {
-    const response = await fetch(`${apiBaseUrl}/api/fetch-speak-like-x`, { next: { revalidate: 0 * 0.5 } });
+type Params = {
+    languageCode: string;
+    slug?: string;
+}
 
-    const { articles } = await response.json();
+export default async function fetchSpeakLikeX(params: Params): Promise<Article[] | Article> {
+    const { languageCode, slug } = params;
 
-    return articles;
+    const response = await fetch(`${apiBaseUrl}/api/fetch-speak-like-x?languageCode=${languageCode}` + (slug ? `&slug=${slug}` : ''), {
+        next: { revalidate: 0 * 0.5 }
+    }
+    );
+
+    return await response.json();
 }

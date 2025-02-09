@@ -1,19 +1,27 @@
 import { apiBaseUrl } from "@/_constants/environment";
 
 type Params = {
-    countryCode: string;
+    countryCode?: string;
     languageCode: string;
-    gender: string;
-    accent: string;
-    conversation: string;
+    gender?: string;
+    accent?: string;
+    conversation?: string;
+    phraseIds?: number[];
 }
 
 export default async function fetchPhrases(params: Params) {
-    const cleanParams = Object.fromEntries(
-        Object.entries(params).filter(([, value]) => value)
-    );
+    const addToQuery = (key: string, value: string | number) => `${key}=${value}`;
 
-    const query = new URLSearchParams(cleanParams).toString();
+    const query = Object.entries(params)
+        .filter(([, value]) => value)
+        .map(([key, value]) => {
+            if (Array.isArray(value)) {
+                return value.map(v => addToQuery(key, v)).join('&');
+            }
+
+            return addToQuery(key, value);
+        })
+        .join('&');
 
     const response = await fetch(`${apiBaseUrl}/api/fetch-phrases?` + query, { next: { revalidate: 3600 * 0.5 } });
 

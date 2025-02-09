@@ -11,7 +11,7 @@ type Params = {
 }
 
 export default function Phrases(params: Params) {
-    const { countryCode, languageCode, phrases, searchParams, texts } = params
+    const { languageCode, phrases, searchParams, texts } = params
 
     return (
         <div className="xl:flex xl:w-[1340px] mx-auto px-4 gap-10">
@@ -30,7 +30,7 @@ export default function Phrases(params: Params) {
                 <div className="xl:grid xl:grid-cols-3 xl:gap-8 pb-20">
                     {phrases.map((phrase, phraseIdx) => (
                         <Phrase
-                            countryCode={countryCode}
+                            // countryCode={countryCode}
                             languageCode={languageCode}
                             texts={texts}
                             phrase={phrase}
