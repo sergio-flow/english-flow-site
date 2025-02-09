@@ -67,7 +67,7 @@ export default async function Home(data: Data) {
 
   const phraseIds = (Array.isArray(article) ? article[0].contentJson : article.contentJson)
     .map((content) => content.showPhrase)
-    .filter((phraseId) => typeof phraseId === "string" || typeof phraseId === "number");
+    .filter((val) => typeof val === "string" || typeof val === "number");
 
   const phrases = await fetchPhrases({ countryCode, languageCode, phraseIds });
 

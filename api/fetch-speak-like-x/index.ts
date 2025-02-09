@@ -47,7 +47,7 @@ export default async function handler(request: VercelRequest, response: VercelRe
         return response.status(400).json({ error: 'Missing language code' });
     }
 
-    const redisKey = `speak-like-x-${languageCode}-${slug}`;
+    const redisKey = `speak-like-x-${languageCode}-${slug}-1`;
 
     const value = await redis.get(redisKey);
 
