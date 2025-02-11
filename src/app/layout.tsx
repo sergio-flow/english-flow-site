@@ -29,8 +29,8 @@ export default function RootLayout({
       <head>
         <link rel="stylesheet" href="https://emoji-css.afeld.me/emoji.css" />
         <meta name="google-adsense-account" content="ca-pub-3923017048696264" />
-        <Script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3923017048696264"
-          crossOrigin="anonymous"></Script>
+        {/* <Script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3923017048696264"
+          crossOrigin="anonymous"></Script> */}
       </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased bg-gray-900`}
