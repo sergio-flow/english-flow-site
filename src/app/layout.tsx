@@ -31,6 +31,15 @@ export default function RootLayout({
         <meta name="google-adsense-account" content="ca-pub-3923017048696264" />
         <Script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3352560740569043"
           crossOrigin="anonymous"></Script>
+
+        <Script async src="https://www.googletagmanager.com/gtag/js?id=G-1ESMP857GS"></Script>
+        <Script>{`
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+
+gtag('config', 'G-1ESMP857GS');        
+`}</Script>
       </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased bg-gray-900`}
