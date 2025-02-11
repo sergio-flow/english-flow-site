@@ -29,11 +29,11 @@ export default function RootLayout({
       <head>
         <link rel="stylesheet" href="https://emoji-css.afeld.me/emoji.css" />
         <meta name="google-adsense-account" content="ca-pub-3923017048696264" />
-        <Script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3352560740569043"
+        <Script id="adsense" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3352560740569043"
           crossOrigin="anonymous"></Script>
 
-        <Script async src="https://www.googletagmanager.com/gtag/js?id=G-1ESMP857GS"></Script>
-        <Script>{`
+        <Script id="gtag" async src="https://www.googletagmanager.com/gtag/js?id=G-1ESMP857GS"></Script>
+        <Script id="gconfig">{`
 window.dataLayer = window.dataLayer || [];
 function gtag(){dataLayer.push(arguments);}
 gtag('js', new Date());
